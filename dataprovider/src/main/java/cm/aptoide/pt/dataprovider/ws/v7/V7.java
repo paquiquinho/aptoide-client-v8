@@ -32,6 +32,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.GetStoreMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
+import cm.aptoide.pt.dataprovider.util.ProcessingException;
 import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
@@ -134,38 +135,51 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
               ((BaseV7Response) t).getInfo()
                   .getStatus())) {
             return Observable.error(new ToRetryThrowable());
+          } else if (((BaseV7Response) t).getInfo() != null
+              && BaseV7Response.Info.Status.PROCESSING.equals(((BaseV7Response) t).getInfo()
+              .getStatus())) {
+            return Observable.error(new ProcessingException());
           } else {
             return Observable.just(t);
           }
         })
-        .retryWhen(errObservable -> errObservable.zipWith(Observable.range(1, MAX_RETRY_COUNT),
-            (throwable, i) -> {
-              // Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
-              // Retry three times if request is queued by server.
-              if ((throwable instanceof ToRetryThrowable) && i < MAX_RETRY_COUNT) {
-                return null;
-              } else {
-                if (isNoNetworkException(throwable)) {
-                  throw new NoNetworkConnectionException(throwable);
-                } else {
-                  if (throwable instanceof HttpException) {
-                    try {
-                      AptoideWsV7Exception exception = new AptoideWsV7Exception(throwable);
-                      exception.setBaseResponse(
-                          (BaseV7Response) converterFactory.responseBodyConverter(
-                              BaseV7Response.class, null, null)
-                              .convert(((HttpException) throwable).response()
-                                  .errorBody()));
-                      throw exception;
-                    } catch (IOException exception) {
-                      throw new RuntimeException(exception);
-                    }
-                  }
-                  throw new RuntimeException(throwable);
-                }
-              }
-            })
-            .delay(500, TimeUnit.MILLISECONDS));
+        .retryWhen(errObservable -> errObservable.flatMap(throwable -> {
+          if (throwable instanceof ProcessingException) {
+            return Observable.timer(1, TimeUnit.SECONDS);
+          } else {
+            return getWhenToRetry(errObservable);
+          }
+        }));
+  }
+
+  @NonNull private Observable<?> getWhenToRetry(Observable<? extends Throwable> errObservable) {
+    return errObservable.zipWith(Observable.range(1, MAX_RETRY_COUNT), (throwable, i) -> {
+      // Return anything will resubscribe to source observable. Throw an exception will call onError in child subscription.
+      // Retry three times if request is queued by server.
+      if (((throwable instanceof ToRetryThrowable)) && i < MAX_RETRY_COUNT) {
+        return null;
+      } else {
+        if (isNoNetworkException(throwable)) {
+          throw new NoNetworkConnectionException(throwable);
+        } else {
+          if (throwable instanceof HttpException) {
+            try {
+              AptoideWsV7Exception exception = new AptoideWsV7Exception(throwable);
+              exception.setBaseResponse(
+                  (BaseV7Response) converterFactory.responseBodyConverter(BaseV7Response.class,
+                      null, null)
+                      .convert(((HttpException) throwable).response()
+                          .errorBody()));
+              throw exception;
+            } catch (IOException exception) {
+              throw new RuntimeException(exception);
+            }
+          }
+          throw new RuntimeException(throwable);
+        }
+      }
+    })
+        .delay(500, TimeUnit.MILLISECONDS);
   }
 
   private Observable<U> handleToken(Observable<U> observable, boolean bypassCache) {
