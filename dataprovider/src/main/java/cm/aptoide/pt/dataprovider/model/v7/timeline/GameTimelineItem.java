@@ -25,7 +25,7 @@ public class GameTimelineItem implements TimelineItem<TimelineCard> {
     }
 
     @Override
-    public TimelineCard getData() {
+    public Game getData() {
         return game;
     }
 }

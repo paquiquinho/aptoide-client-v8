@@ -13,6 +13,8 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.AggregatedSocialVideoTimelin
 import cm.aptoide.pt.dataprovider.model.v7.timeline.AppUpdateTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.Article;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.ArticleTimelineItem;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.Game;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.GameTimelineItem;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.GetUserTimeline;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.PopularAppTimelineItem;
@@ -328,6 +330,13 @@ public class TimelineResponseCardMapper {
           aggregatedSocialStoreLatestApps.getSharedStore().getStats().getApps(),
           aggregatedSocialStoreLatestApps.getDate(), aggregatedSocialStoreLatestApps.getApps(),
           abUrl, CardType.AGGREGATED_SOCIAL_STORE));
+    }
+    else if (item instanceof GameTimelineItem) {
+      final Game game = ((GameTimelineItem) item).getData();
+      cards.add(new cm.aptoide.pt.v8engine.social.data.Game(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
+              game.getWrongAnswer().getName(), game.getWrongAnswer().getIcon(), game.getWrongAnswer().getUrl(),
+              game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
+              game.getRankings().getFRanking(), abUrl, false, CardType.GAME));
     }
     postIds.add(item.getData().getCardId());
   }
