@@ -7,6 +7,7 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AppUpdateViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.GameViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PopularAppViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PostViewHolder;
@@ -109,6 +110,9 @@ public class CardViewHolderFactory {
       case LOGIN:
         return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
+      case GAME:
+        return new GameViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.timeline_game_item, parent, false));
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }
