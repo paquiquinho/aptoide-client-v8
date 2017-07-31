@@ -333,10 +333,45 @@ public class TimelineResponseCardMapper {
     }
     else if (item instanceof GameTimelineItem) {
       final Game game = ((GameTimelineItem) item).getData();
-      cards.add(new cm.aptoide.pt.v8engine.social.data.Game(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
-              game.getWrongAnswer().getName(), game.getWrongAnswer().getIcon(), game.getWrongAnswer().getUrl(),
-              game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
-              game.getRankings().getFRanking(), abUrl, false, CardType.GAME));
+      if(game.getGameType() == 1) {
+        cards.add(new cm.aptoide.pt.v8engine.social.data.Game1(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
+                game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
+                game.getRankings().getFRanking(), abUrl, false, CardType.GAME1, game.getWrongAnswer().get(0).getName(), game.getWrongAnswer().get(0).getUrl()));
+      }
+    }
+    else if (item instanceof GameTimelineItem) {
+      final Game game = ((GameTimelineItem) item).getData();
+      if(game.getGameType() == 2) {
+        final String questionIcon;
+        if(game.getWrongAnswer().size()== 1){
+          questionIcon = null;
+        }
+        else{
+          questionIcon = game.getWrongAnswer().get(1).getIcon();
+        }
+        cards.add(new cm.aptoide.pt.v8engine.social.data.Game2(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
+                game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
+                game.getRankings().getFRanking(), abUrl, false, CardType.GAME2, game.getWrongAnswer().get(0).getIcon(), game.getWrongAnswer().get(0).getUrl(), questionIcon));
+      }
+    }
+    else if (item instanceof GameTimelineItem) {
+      final Game game = ((GameTimelineItem) item).getData();
+      if(game.getGameType() == 3) {
+        final String questionIcon;
+        final String questionName;
+        if(game.getWrongAnswer().size()== 1){
+          questionIcon = null;
+          questionName = null;
+        }
+        else{
+          questionIcon = game.getWrongAnswer().get(1).getIcon();
+          questionName = game.getWrongAnswer().get(1).getName();
+        }
+        cards.add(new cm.aptoide.pt.v8engine.social.data.Game3(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
+                game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
+                game.getRankings().getFRanking(), abUrl, false, CardType.GAME2, game.getWrongAnswer().get(0).getIcon(), game.getWrongAnswer().get(0).getName(),
+                game.getWrongAnswer().get(0).getUrl(), questionIcon, questionName));
+      }
     }
     postIds.add(item.getData().getCardId());
   }

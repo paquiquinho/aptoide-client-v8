@@ -131,58 +131,60 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+
             <RelativeLayout
                 android:id="@+id/displayable_social_timeline_game_card_question1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="invisible"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true">
+                android:orientation="vertical"
+                android:visibility="invisible">
+
                 <ImageView
                     android:id="@+id/game_card_question1_icon"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
-                    tools:src="@mipmap/ic_launcher"/>
+                    tools:src="@mipmap/ic_launcher" />
+
                 <TextView
                     android:id="@+id/game_card_question1_question"
+                    style="@style/Aptoide.TextView.Regular.S.Grey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@id/game_card_question1_icon"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="Insert question here!"
-                    style="@style/Aptoide.TextView.Regular.S.Grey"
-                    />
+                    android:text="Insert question here!" />
+
                 <TextView
+                    style="@style/Aptoide.TextView.Regular.XS.Grey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@id/game_card_question1_question"
-                    android:layout_marginTop="25dp"
                     android:layout_marginLeft="10dp"
-                    android:text="Left: Answer1"
-                    style="@style/Aptoide.TextView.Regular.XS.Grey"
-                    />
+                    android:layout_marginTop="25dp"
+                    android:text="Left: Answer1" />
 
                 <TextView
+                    style="@style/Aptoide.TextView.Regular.XS.Grey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/game_card_question1_question"
-                    android:layout_marginTop="25dp"
                     android:layout_marginRight="10dp"
-                    android:text="Right: Answer2"
-                    style="@style/Aptoide.TextView.Regular.XS.Grey"
-                    />
+                    android:layout_marginTop="25dp"
+                    android:text="Right: Answer2" />
+
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/game_card_question1_question"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/appstimeline_game_swipe_icon"/>
+                    android:src="@drawable/appstimeline_game_swipe_icon" />
 
             </RelativeLayout>
 
@@ -190,18 +192,18 @@
                 android:id="@+id/displayable_social_timeline_game_card_question2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible"
-                android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                >
+                android:layout_alignParentTop="true"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
                 <TextView
                     android:id="@+id/game_card_question2_question"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="70dp"
-                    android:text="Testing question type 2"/>
+                    android:text="Testing question type 2" />
 
 
                 <ImageView
@@ -210,9 +212,9 @@
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@id/game_card_question2_question"
-                    android:layout_marginTop="40dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@mipmap/ic_launcher"/>
+                    android:layout_marginTop="40dp"
+                    android:src="@mipmap/ic_launcher" />
 
                 <ImageView
                     android:id="@+id/game_card_question2_rightA_icon"
@@ -220,17 +222,92 @@
                     android:layout_height="50dp"
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/game_card_question2_question"
-                    android:layout_marginTop="40dp"
                     android:layout_marginRight="10dp"
-                    android:src="@mipmap/ic_launcher"/>
+                    android:layout_marginTop="40dp"
+                    android:src="@mipmap/ic_launcher" />
 
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_below="@id/game_card_question2_question"
-                    android:layout_marginTop="35dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/appstimeline_game_swipe_icon"/>
+                    android:layout_marginTop="35dp"
+                    android:src="@drawable/appstimeline_game_swipe_icon" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/displayable_social_timeline_game_card_question3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:id="@+id/game_card_question3_icon"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    tools:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/game_card_question3_question"
+                    style="@style/Aptoide.TextView.Regular.S.Grey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/game_card_question3_icon"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="Insert question here!" />
+
+                <TextView
+                    android:id="@+id/game_card_question3_answer_left"
+                    style="@style/Aptoide.TextView.Regular.XS.Grey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/game_card_question3_question"
+                    android:layout_marginTop="25dp"
+                    android:layout_toRightOf="@id/game_card_question3_icon_left"
+                    android:text="Answer1" />
+
+                <ImageView
+                    android:id="@+id/game_card_question3_icon_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/game_card_question3_question"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    tools:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:id="@+id/game_card_question3_answer_right"
+                    style="@style/Aptoide.TextView.Regular.XS.Grey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/game_card_question3_question"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="25dp"
+                    android:text="Answer2" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/game_card_question3_question"
+                    android:layout_marginTop="5dp"
+                    android:layout_toLeftOf="@id/game_card_question3_answer_right"
+                    tools:src="@mipmap/ic_launcher" />
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/game_card_question3_question"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/appstimeline_game_swipe_icon" />
 
             </RelativeLayout>
             <!--<ImageView-->

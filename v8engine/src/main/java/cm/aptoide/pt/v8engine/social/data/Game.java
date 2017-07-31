@@ -7,14 +7,11 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.Ab;
  * Created by franciscocalado on 7/28/17.
  */
 
-public class Game implements Post {
+public abstract class Game implements Post {
 
     private final String cardId;
     private final App rightAnswer;
     private final String answerURL;
-    private final String wrongName;
-    private final String wrongIcon;
-    private final String wrongURL;
     private final String question;
     private final int score;
     private final int gRanking;
@@ -24,14 +21,11 @@ public class Game implements Post {
     private final boolean isLiked;
     private final CardType cardType;
 
-    public Game(String cardId, App rightAnswer, String answerURL, String wrongName, String wrongIcon, String wrongURL,
-                String question, int score, int gRanking, int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType){
+    public Game(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
+                int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType){
         this.cardId = cardId;
         this.rightAnswer = rightAnswer;
         this.answerURL = answerURL;
-        this.wrongName = wrongName;
-        this.wrongIcon = wrongIcon;
-        this.wrongURL = wrongURL;
         this.question = question;
         this.score = score;
         this.gRanking = gRanking;
@@ -63,18 +57,6 @@ public class Game implements Post {
 
     public String getAnswerURL() {
         return answerURL;
-    }
-
-    public String getWrongName() {
-        return wrongName;
-    }
-
-    public String getWrongIcon() {
-        return wrongIcon;
-    }
-
-    public String getWrongURL() {
-        return wrongURL;
     }
 
     public String getQuestion() {
