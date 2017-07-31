@@ -369,7 +369,7 @@ public class TimelineResponseCardMapper {
         }
         cards.add(new cm.aptoide.pt.v8engine.social.data.Game3(game.getCardId(), game.getRightAnswer(), game.getAnswerURL(),
                 game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
-                game.getRankings().getFRanking(), abUrl, false, CardType.GAME2, game.getWrongAnswer().get(0).getIcon(), game.getWrongAnswer().get(0).getName(),
+                game.getRankings().getFRanking(), abUrl, false, CardType.GAME3, game.getWrongAnswer().get(0).getIcon(), game.getWrongAnswer().get(0).getName(),
                 game.getWrongAnswer().get(0).getUrl(), questionIcon, questionName));
       }
     }

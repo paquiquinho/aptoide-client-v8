@@ -10,12 +10,14 @@ import cm.aptoide.pt.v8engine.social.data.Game;
 
 public class Game1 extends Game {
 
+    private final App app;
     private final String wrongName;
     private final String wrongURL;
 
     public Game1(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
                  int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, String wrongName, String wrongURL) {
         super(cardId, rightAnswer, answerURL, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType);
+        this.app = rightAnswer;
         this.wrongName = wrongName;
         this.wrongURL = wrongURL;
     }
@@ -26,5 +28,9 @@ public class Game1 extends Game {
 
     public String getWrongURL() {
         return wrongURL;
+    }
+
+    public App getApp() {
+        return app;
     }
 }

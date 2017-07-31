@@ -31,6 +31,7 @@
                 android:layout_marginStart="12.7dp"
                 android:layout_marginTop="14dp"
                 tools:ignore="contentDescription"
+                tools:src="@mipmap/ic_launcher"
                 />
 
             <TextView
@@ -61,15 +62,7 @@
                 style="@style/Aptoide.TextView.Regular.XS.Grey"
                 />
 
-            <!--<ImageView-->
-                <!--android:id="@+id/displayable_social_timeline_game_card_type_icon"-->
-                <!--android:layout_width="15dp"-->
-                <!--android:layout_height="15dp"-->
-                <!--android:layout_alignEnd="@+id/card_custom_view_line_separator"-->
-                <!--android:layout_alignRight="@+id/card_custom_view_line_separator"-->
-                <!--android:layout_marginTop="@dimen/appstimeline_card_icon"-->
-                <!--android:src="@drawable/appstimeline_recommendation_compass_icon"-->
-                <!--/>-->
+
             <ImageView
                 android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"
                 android:layout_width="15dp"
@@ -160,6 +153,7 @@
                     android:text="Insert question here!" />
 
                 <TextView
+                    android:id="@+id/game_card_question1_answerLeft"
                     style="@style/Aptoide.TextView.Regular.XS.Grey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -170,6 +164,7 @@
                     android:text="Left: Answer1" />
 
                 <TextView
+                    android:id="@+id/game_card_question1_answerRight"
                     style="@style/Aptoide.TextView.Regular.XS.Grey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

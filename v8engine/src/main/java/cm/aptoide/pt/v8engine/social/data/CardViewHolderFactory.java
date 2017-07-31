@@ -7,7 +7,9 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedMediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedRecommendationViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AggregatedStoreViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.AppUpdateViewHolder;
-import cm.aptoide.pt.v8engine.social.view.viewholder.GameViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.Game1ViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.Game2ViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.Game3ViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PopularAppViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PostViewHolder;
@@ -111,14 +113,14 @@ public class CardViewHolderFactory {
         return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
       case GAME1:
-        return new GameViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.timeline_game1_item, parent, false));
+        return new Game1ViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game1_item, parent, false), cardTouchEventPublishSubject);
         case GAME2:
-            return new GameViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.timeline_game2_item, parent, false));
+            return new Game2ViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.timeline_game2_item, parent, false), cardTouchEventPublishSubject);
         case GAME3:
-            return new GameViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.timeline_game3_item, parent, false));
+            return new Game3ViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.timeline_game3_item, parent, false), cardTouchEventPublishSubject);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }

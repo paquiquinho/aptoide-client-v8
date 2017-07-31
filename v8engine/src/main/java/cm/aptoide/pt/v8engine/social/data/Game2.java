@@ -10,6 +10,7 @@ import cm.aptoide.pt.v8engine.social.data.Game;
 
 public class Game2 extends Game {
 
+    private final App app;
     private final String wrongIcon;
     private final String wrongURL;
     private final String questionIcon;
@@ -17,6 +18,7 @@ public class Game2 extends Game {
     public Game2(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
                  int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, String wrongIcon, String wrongURL, String questionIcon) {
         super(cardId, rightAnswer, answerURL, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType);
+        this.app = rightAnswer;
         this.wrongIcon = wrongIcon;
         this.wrongURL = wrongURL;
         this.questionIcon = questionIcon;
@@ -32,5 +34,9 @@ public class Game2 extends Game {
 
     public String getQuestionIcon() {
         return questionIcon;
+    }
+
+    public App getApp() {
+        return app;
     }
 }
