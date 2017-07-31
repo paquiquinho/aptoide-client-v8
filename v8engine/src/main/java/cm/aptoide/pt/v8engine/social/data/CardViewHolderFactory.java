@@ -110,9 +110,15 @@ public class CardViewHolderFactory {
       case LOGIN:
         return new TimelineLoginPostViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
-      case GAME:
+      case GAME1:
         return new GameViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.timeline_game_item, parent, false));
+                .inflate(R.layout.timeline_game1_item, parent, false));
+        case GAME2:
+            return new GameViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.timeline_game2_item, parent, false));
+        case GAME3:
+            return new GameViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.timeline_game3_item, parent, false));
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }
