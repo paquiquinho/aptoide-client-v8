@@ -46,8 +46,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     @Override
     public void setPost(Game1 card, int position) {
-        this.score.setText(card.getScore());
-        this.leaderboard.setText(card.getgRanking());
+        this.score.setText(String.valueOf(card.getScore()));
+        this.leaderboard.setText(String.valueOf(card.getgRanking()));
         ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), questionIcon);
         this.question.setText(card.getQuestion());
 

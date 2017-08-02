@@ -338,9 +338,6 @@ public class TimelineResponseCardMapper {
                 game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
                 game.getRankings().getFRanking(), abUrl, false, CardType.GAME1, game.getWrongAnswer().get(0).getName(), game.getWrongAnswer().get(0).getUrl()));
       }
-    }
-    else if (item instanceof GameTimelineItem) {
-      final Game game = ((GameTimelineItem) item).getData();
       if(game.getGameType() == 2) {
         final String questionIcon;
         if(game.getWrongAnswer().size()== 1){
@@ -353,9 +350,6 @@ public class TimelineResponseCardMapper {
                 game.getQuestion(), game.getRankings().getScore(), game.getRankings().getGRanking(), game.getRankings().getLRanking(),
                 game.getRankings().getFRanking(), abUrl, false, CardType.GAME2, game.getWrongAnswer().get(0).getIcon(), game.getWrongAnswer().get(0).getUrl(), questionIcon));
       }
-    }
-    else if (item instanceof GameTimelineItem) {
-      final Game game = ((GameTimelineItem) item).getData();
       if(game.getGameType() == 3) {
         final String questionIcon;
         final String questionName;

@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -44,14 +45,19 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
     @Override
     public void setPost(Game3 card, int position) {
-        this.score.setText(card.getScore());
-        this.leaderboard.setText(card.getgRanking());
+        this.score.setText(String.valueOf(card.getScore()));
+        this.leaderboard.setText(String.valueOf(card.getgRanking()));
         if (card.getQuestionIcon() == null){
             questionIcon.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            lp.setMargins(0, 100, 0, 50);
+            lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            question.setLayoutParams(lp);
+
         }
         else{
             questionIcon.setVisibility(View.VISIBLE);
-            ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), questionIcon);
+            ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
         }
         this.question.setText(card.getQuestion());
 
