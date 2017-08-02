@@ -11,6 +11,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Game3;
+import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PostViewHolder;
 import rx.subjects.PublishSubject;
 
@@ -26,6 +27,10 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     private final ImageView answerRightIcon;
     private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
+    private final ImageView headerIcon;
+    private final TextView headerTitle;
+    private final TextView headerSubTitle;
+
 
     public Game3ViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
         super(itemView);
@@ -40,6 +45,13 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         answerLeftIcon = (ImageView) itemView.findViewById(R.id.game_card_question3_icon_left);
         answerRightIcon = (ImageView) itemView.findViewById(R.id.game_card_question3_icon_right);
 
+        this.headerIcon =
+                (ImageView) itemView.findViewById(R.id.displayable_social_timeline_game_card_icon);
+        this.headerTitle =
+                (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_title);
+        this.headerSubTitle =
+                (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_subtitle);
+
 
     }
 
@@ -47,6 +59,11 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     public void setPost(Game3 card, int position) {
         this.score.setText(String.valueOf(card.getScore()));
         this.leaderboard.setText(String.valueOf(card.getgRanking()));
+
+        ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
+        this.headerTitle.setText("Aptoide Timeline Quiz");
+        this.headerSubTitle.setText("Card 1/10");
+
         if (card.getQuestionIcon() == null){
             questionIcon.setVisibility(View.GONE);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -75,5 +92,9 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
             this.answerRight.setText(card.getApp().getName());
         }
 
+        answerLeftIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerLeft.getText()))));
+        answerRightIcon.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerRight.getText()))));
     }
 }

@@ -24,6 +24,7 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
@@ -415,6 +416,10 @@ public class TimelinePresenter implements Presenter {
               AggregatedRecommendation card = (AggregatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
+            }
+            else if(type.isGame()){
+                GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
+                Logger.d(this.getClass().getCanonicalName(), "Clicked on: "+event.getAnswerText());
             }
           }
         })
