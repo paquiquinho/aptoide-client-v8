@@ -173,11 +173,11 @@
 
                 <ImageView
                     android:id="@+id/game_card_question3_icon_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_below="@id/game_card_question3_question"
                     android:layout_toRightOf="@id/game_card_question3_answer_left"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     tools:src="@mipmap/ic_launcher" />
 
                 <TextView
@@ -193,10 +193,10 @@
 
                 <ImageView
                     android:id="@+id/game_card_question3_icon_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_below="@id/game_card_question3_question"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:layout_toLeftOf="@id/game_card_question3_answer_right"
                     tools:src="@mipmap/ic_launcher" />
 

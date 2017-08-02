@@ -67,14 +67,14 @@
                 android:id="@+id/displayable_social_timeline_game_card_leaderboard_icon"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard"
+                android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_leaderboard"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="@dimen/appstimeline_card_icon"
                 android:src="@drawable/appstimeline_recommendation_compass_icon"
                 />
 
             <TextView
-                android:id="@+id/displayable_social_timeline_game_card_leaderboard"
+                android:id="@id/displayable_social_timeline_game_card_leaderboard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/card_custom_view_line_separator"
@@ -88,14 +88,14 @@
                 android:id="@+id/displayable_social_timeline_game_card_score_icon"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_toLeftOf="@id/displayable_social_timeline_game_card_score"
+                android:layout_toLeftOf="@+id/displayable_social_timeline_game_card_score"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="@dimen/appstimeline_card_icon"
                 android:src="@drawable/appstimeline_recommendation_compass_icon"
                 />
 
             <TextView
-                android:id="@+id/displayable_social_timeline_game_card_score"
+                android:id="@id/displayable_social_timeline_game_card_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
