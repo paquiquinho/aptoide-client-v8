@@ -664,5 +664,15 @@
   <string name="generalscreen_short_root_install_timeout_error_action">Retry</string>
   <string name="generalscreen_short_root_install_success_install">App successfully installed</string>
 
+  <!-- Test Values to Populate Game Answer Leaderboard -->
+
+  <string-array name="test_leaderboard">
+    <item>98 - Someone</item>
+    <item>99 - ThatGuy</item>
+    <item>100 - Me</item>
+    <item>101 - Random</item>
+    <item>102 - What?</item>
+  </string-array>
+
 
 </resources>
