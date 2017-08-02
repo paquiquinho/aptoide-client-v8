@@ -10,6 +10,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.GameAnswer;
+import cm.aptoide.pt.v8engine.social.data.GameAnswerTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
 import rx.subjects.PublishSubject;
 
@@ -69,9 +70,9 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.headerTitle.setText("Aptoide Timeline Quiz");
         this.headerSubTitle.setText("Card 1/10");
 
-        //This is !!WRONG!! Need to create an AnswerCardTouchEvent and go from there
+        //This needs work. Quite a lot of it I believe...
         getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, "")));
+                new GameAnswerTouchEvent(card, CardTouchEvent.Type.BODY, position)));
 
     }
 }
