@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
 import cm.aptoide.pt.v8engine.social.data.PopularAppTouchEvent;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
@@ -63,21 +64,26 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
   @Override public void setPost(PopularApp card, int position) {
     this.headerSubTitle.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getTimestamp()));
-    ImageLoader.with(itemView.getContext()).load(card.getAppIcon(), appIcon);
+    ImageLoader.with(itemView.getContext())
+        .load(card.getAppIcon(), appIcon);
     this.appName.setText(card.getAppName());
     this.appRating.setRating(card.getAppAverageRating());
     showFriendsAvatars(card, itemView.getContext());
     this.getAppButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
     if (card.isLiked()) {
-      likeButton.setHeartState(true);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
@@ -91,7 +97,8 @@ public class PopularAppViewHolder extends PostViewHolder<PopularApp> {
     for (UserSharerTimeline.User friend : card.getUsers()) {
       friendView = inflater.inflate(R.layout.social_timeline_friend, headerUsersContainer, false);
       friendAvatar = (ImageView) friendView.findViewById(R.id.social_timeline_friend_avatar);
-      ImageLoader.with(context).loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
+      ImageLoader.with(context)
+          .loadWithShadowCircleTransform(friend.getAvatar(), friendAvatar);
 
       friendView.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
           new PopularAppTouchEvent(card, friend.getId(), "DEFAULT", CardTouchEvent.Type.HEADER)));

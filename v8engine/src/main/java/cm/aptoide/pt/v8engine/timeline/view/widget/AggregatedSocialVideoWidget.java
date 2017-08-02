@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.MinimalCard;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.UserSharerTimeline;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.timeline.view.displayable.AggregatedSocialVideoDisplayable;
@@ -223,7 +225,7 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
             .get(1)
             .getUser() != null) {
           ImageLoader.with(getContext())
-              .loadWithShadowCircleTransform(minimalCard.getSharers()
+              .loadWithShadowCircleTransform(displayable.getSharers()
                   .get(1)
                   .getUser()
                   .getAvatar(), minimalCardHeaderMainAvatar2);
@@ -284,7 +286,9 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
           }, err -> CrashReport.getInstance()
               .log(err)));
 
-      compositeSubscription.add(displayable.getRelatedToApplication()
+      compositeSubscription.add(displayable.getRelatedToApplication(AccessorFactory.getAccessorFor(
+          ((V8Engine) getContext().getApplicationContext()
+              .getApplicationContext()).getDatabase(), Installed.class))
           .observeOn(AndroidSchedulers.mainThread())
           .subscribe(installeds -> {
             if (installeds != null && !installeds.isEmpty()) {
@@ -373,9 +377,9 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
           && minimalCard.getComments()
           .size() > 0) {
         numberComments.setVisibility(View.VISIBLE);
-        numberComments.setText(String.format("%s %s", String.valueOf(minimalCard.getStats()
-            .getComments()), getContext().getString(R.string.comments)
-            .toLowerCase()));
+        numberComments.setText(getContext().getResources()
+            .getQuantityString(R.plurals.timeline_short_comment, (int) minimalCard.getStats()
+                .getComments()));
         socialCommentBar.setVisibility(View.VISIBLE);
         ImageLoader.with(getContext())
             .loadWithShadowCircleTransform(minimalCard.getComments()
@@ -510,9 +514,9 @@ public class AggregatedSocialVideoWidget extends CardWidget<AggregatedSocialVide
   private void showNumberOfLikes(long numberOfLikes, TextView numberLikes,
       TextView numberLikesOneLike) {
     numberLikes.setVisibility(View.VISIBLE);
-    numberLikes.setText(String.format("%s %s", String.valueOf(numberOfLikes),
-        getContext().getString(R.string.likes)
-            .toLowerCase()));
+    numberLikes.setText(
+        getContext().getString(R.string.timeline_short_like_present_plural, numberOfLikes)
+            .toLowerCase());
     numberLikesOneLike.setVisibility(View.INVISIBLE);
   }
 

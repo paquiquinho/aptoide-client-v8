@@ -26,14 +26,11 @@ import cm.aptoide.pt.utils.SimpleSubscriber;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
-import cm.aptoide.pt.v8engine.view.account.LoginBottomSheetActivity;
+import cm.aptoide.pt.v8engine.view.navigator.ActivityResultNavigator;
 import com.facebook.FacebookSdk;
 import rx.functions.Action0;
 
-/**
- * Created by marcelobenites on 18/01/17.
- */
-@Deprecated public abstract class PermissionServiceActivity extends LoginBottomSheetActivity
+@Deprecated public abstract class PermissionServiceActivity extends ActivityResultNavigator
     implements PermissionService {
 
   private static final String TAG = PermissionServiceActivity.class.getName();
@@ -256,12 +253,12 @@ import rx.functions.Action0;
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestAccessToExternalFileSystem(boolean forceShowRationale,
       @StringRes int rationaleMessage, @Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDennied) {
+      @Nullable Action0 toRunWhenAccessIsDenied) {
     int hasPermission =
         ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     if (hasPermission != PackageManager.PERMISSION_GRANTED) {
       this.toRunWhenAccessToFileSystemIsGranted = toRunWhenAccessIsGranted;
-      this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDennied;
+      this.toRunWhenAccessToFileSystemIsDenied = toRunWhenAccessIsDenied;
 
       if (forceShowRationale || ActivityCompat.shouldShowRequestPermissionRationale(this,
           Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

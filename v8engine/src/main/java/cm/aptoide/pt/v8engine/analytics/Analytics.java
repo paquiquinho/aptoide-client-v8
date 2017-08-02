@@ -222,8 +222,8 @@ public class Analytics {
       private static final String UTM_CAMPAIGN = "utm_campaign";
       private static final String UTM_CONTENT = "utm_content";
       private static final String ENTRY_POINT = "entry_point";
-      private static final String URL = "url";
-      private static final String PACKAGE = "package";
+      private static final String URL = "app_url";
+      private static final String PACKAGE = "app_package";
       private static final String COUNTRY = "country";
       private static final String BROWSER = "browser";
       private static final String SITE_VERSION = "site_version";
@@ -562,7 +562,7 @@ public class Analytics {
           "Like Card"), COMMENT_LIST("Comment List"), RATE_DIALOG("Reviews FAB"), REPLY_REVIEW(
           "Reply Review"), REVIEW_FEEDBACK("Review Feedback"), SOCIAL_LIKE(
           "Like Social Card"), STORE_COMMENT("Store Comment"), LATEST_COMMENTS_STORE(
-          "Comment on Latest Store Comments");
+          "Comment on Latest Store Comments"), POST_ON_TIMELINE("Post on Timeline"),;
 
       private final String origin;
 

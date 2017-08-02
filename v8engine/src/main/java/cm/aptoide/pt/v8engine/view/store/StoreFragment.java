@@ -42,13 +42,13 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.database.AccessorFactory;
 import cm.aptoide.pt.v8engine.social.view.TimelineFragment;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProvider;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreTheme;
 import cm.aptoide.pt.v8engine.store.StoreUtils;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
-import cm.aptoide.pt.v8engine.timeline.view.AppsTimelineFragment;
 import cm.aptoide.pt.v8engine.util.SearchUtils;
 import cm.aptoide.pt.v8engine.view.ThemeUtils;
 import cm.aptoide.pt.v8engine.view.fragment.BasePagerToolbarFragment;
@@ -131,7 +131,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl();
+    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
+        ((V8Engine) getContext().getApplicationContext()
+            .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     httpClient = ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
@@ -291,7 +293,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   }
 
   protected void setupSearch(Menu menu) {
-    SearchUtils.setupInsideStoreSearchView(menu, this, storeName);
+    SearchUtils.setupInsideStoreSearchView(menu, getActivity(), getFragmentNavigator(), storeName);
   }
 
   /**
@@ -399,7 +401,10 @@ public class StoreFragment extends BasePagerToolbarFragment {
         .subscribe(eResponse -> {
           switch (eResponse) {
             case NO:
-              StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider);
+              StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider,
+                  AccessorFactory.getAccessorFor(((V8Engine) getContext().getApplicationContext()
+                          .getApplicationContext()).getDatabase(),
+                      cm.aptoide.pt.database.realm.Store.class));
             case YES:
             case CANCEL:
               getActivity().onBackPressed();

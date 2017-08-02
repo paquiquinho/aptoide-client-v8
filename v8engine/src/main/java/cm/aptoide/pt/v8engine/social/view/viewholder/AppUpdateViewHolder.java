@@ -16,6 +16,7 @@ import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.AppUpdate;
 import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.timeline.view.LikeButtonView;
 import cm.aptoide.pt.v8engine.util.DateCalculator;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
@@ -75,7 +76,8 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
     this.headerTitle.setText(getStyledTitle(itemView.getContext(), card.getStoreName()));
     this.headerSubTitle.setText(
         getTimeSinceLastUpdate(itemView.getContext(), card.getUpdateAddedDate()));
-    ImageLoader.with(itemView.getContext()).load(card.getAppUpdateIcon(), appIcon);
+    ImageLoader.with(itemView.getContext())
+        .load(card.getAppUpdateIcon(), appIcon);
     this.appName.setText(getAppTitle(itemView.getContext(), card.getAppUpdateName()));
     setAppUpdateButtonText(card);
     this.errorText.setVisibility(View.GONE);
@@ -86,14 +88,18 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
     this.cardHeader.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.HEADER)));
     if (card.isLiked()) {
-      likeButton.setHeartState(true);
+      if (card.isLikeFromClick()) {
+        likeButton.setHeartState(true);
+        card.setLikedFromClick(false);
+      } else {
+        likeButton.setHeartStateWithoutAnimation(true);
+      }
     } else {
       likeButton.setHeartState(false);
     }
-    this.like.setOnClickListener(click -> this.likeButton.performClick());
+    this.like.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
+        new LikeCardTouchEvent(card, CardTouchEvent.Type.LIKE, position)));
 
-    this.likeButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
-        new CardTouchEvent(card, CardTouchEvent.Type.LIKE)));
     this.commentButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
         new CardTouchEvent(card, CardTouchEvent.Type.COMMENT)));
     this.shareButton.setOnClickListener(click -> this.cardTouchEventPublishSubject.onNext(
@@ -102,8 +108,8 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
 
   private Spannable getStyledTitle(Context context, String storeName) {
     return spannableFactory.createColorSpan(
-        context.getString(R.string.store_has_an_update, storeName),
-        ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
+        context.getString(R.string.timeline_title_card_title_has_update_present_singular,
+            storeName), ContextCompat.getColor(context, R.color.black_87_alpha), storeName);
   }
 
   public String getTimeSinceLastUpdate(Context context, Date updatedDate) {
@@ -116,19 +122,25 @@ public class AppUpdateViewHolder extends PostViewHolder<AppUpdate> {
   }
 
   private void setAppUpdateButtonText(AppUpdate card) {
-    if (card.getInstallationStatus().equals(Install.InstallationStatus.UNINSTALLED)
-        || card.getInstallationStatus().equals(Install.InstallationStatus.PAUSED)) {
-      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString().toUpperCase());
-    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.INSTALLING)) {
+    if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.UNINSTALLED) || card.getInstallationStatus()
+        .equals(Install.InstallationStatus.PAUSED)) {
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
+          .toUpperCase());
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.INSTALLING)) {
       this.appUpdate.setText(itemView.getContext()
           .getString(R.string.displayable_social_timeline_app_update_updating));
-    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.INSTALLED)) {
-      this.appUpdate.setText(
-          itemView.getContext().getString(R.string.displayable_social_timeline_app_update_updated));
-    } else if (card.getInstallationStatus().equals(Install.InstallationStatus.GENERIC_ERROR)) {
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.INSTALLED)) {
+      this.appUpdate.setText(itemView.getContext()
+          .getString(R.string.displayable_social_timeline_app_update_updated));
+    } else if (card.getInstallationStatus()
+        .equals(Install.InstallationStatus.GENERIC_ERROR)) {
       this.errorText.setText(R.string.displayable_social_timeline_app_update_error);
       this.errorText.setVisibility(View.VISIBLE);
-      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString().toUpperCase());
+      this.appUpdate.setText(getUpdateAppText(itemView.getContext()).toString()
+          .toUpperCase());
     }
   }
 

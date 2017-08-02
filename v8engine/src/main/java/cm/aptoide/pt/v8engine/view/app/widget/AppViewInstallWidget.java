@@ -17,7 +17,6 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -26,7 +25,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -81,7 +79,6 @@ import rx.android.schedulers.AndroidSchedulers;
   private RelativeLayout downloadProgressLayout;
   private RelativeLayout installAndLatestVersionLayout;
 
-  private CheckBox shareInTimeline;
   private ProgressBar downloadProgress;
   private TextView textProgress;
   private ImageView actionResume;
@@ -94,20 +91,19 @@ import rx.android.schedulers.AndroidSchedulers;
   private View latestAvailableTrustedSeal;
   private View notLatestAvailableText;
   private TextView otherVersions;
-  private MinimalAd minimalAd;
 
   private App trustedVersion;
-  private PermissionService permissionRequest;
   private InstallManager installManager;
   private boolean isUpdate;
   private DownloadEventConverter downloadInstallEventConverter;
   private Analytics analytics;
   private InstallEventConverter installConverter;
   private AptoideAccountManager accountManager;
-  private BodyInterceptor<BaseBody> bodyInterceptor;
   private AppViewInstallDisplayable displayable;
   private SocialRepository socialRepository;
   private DownloadFactory downloadFactory;
+  private PermissionService permissionService;
+  private PermissionManager permissionManager;
 
   public AppViewInstallWidget(View itemView) {
     super(itemView);
@@ -117,7 +113,7 @@ import rx.android.schedulers.AndroidSchedulers;
     downloadProgressLayout = (RelativeLayout) itemView.findViewById(R.id.download_progress_layout);
     installAndLatestVersionLayout =
         (RelativeLayout) itemView.findViewById(R.id.install_and_latest_version_layout);
-    shareInTimeline = (CheckBox) itemView.findViewById(R.id.share_in_timeline);
+
     downloadProgress = (ProgressBar) itemView.findViewById(R.id.download_progress);
     textProgress = (TextView) itemView.findViewById(R.id.text_progress);
     actionPause = (ImageView) itemView.findViewById(R.id.ic_action_pause);
@@ -147,7 +143,8 @@ import rx.android.schedulers.AndroidSchedulers;
     accountManager = ((V8Engine) getContext().getApplicationContext()).getAccountManager();
     installManager = ((V8Engine) getContext().getApplicationContext()).getInstallManager(
         InstallerFactory.ROLLBACK);
-    bodyInterceptor = ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    BodyInterceptor<BaseBody> bodyInterceptor =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
     final TokenInvalidator tokenInvalidator =
         ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     downloadInstallEventConverter =
@@ -177,7 +174,6 @@ import rx.android.schedulers.AndroidSchedulers;
             tokenInvalidator,
             ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
 
-    minimalAd = this.displayable.getMinimalAd();
     GetApp getApp = this.displayable.getPojo();
     GetAppMeta.App currentApp = getApp.getNodes()
         .getMeta()
@@ -225,7 +221,8 @@ import rx.android.schedulers.AndroidSchedulers;
       latestAvailableLayout.setVisibility(View.GONE);
     }
 
-    permissionRequest = ((PermissionService) getContext());
+    permissionService = ((PermissionService) getContext());
+    permissionManager = new PermissionManager();
   }
 
   private void updateUi(AppViewInstallDisplayable displayable, Install install, boolean isSetup,
@@ -302,12 +299,13 @@ import rx.android.schedulers.AndroidSchedulers;
       case UPDATE:
         //update
         isUpdate = true;
-        setupActionButton(R.string.update, installOrUpgradeListener(app, getApp.getNodes()
-            .getVersions(), displayable));
+        setupActionButton(R.string.appview_button_update, installOrUpgradeListener(app,
+            getApp.getNodes()
+                .getVersions(), displayable));
         break;
       case DOWNGRADE:
         //downgrade
-        setupActionButton(R.string.downgrade, downgradeListener(app));
+        setupActionButton(R.string.appview_button_downgrade, downgradeListener(app));
         break;
     }
     setupDownloadControls(app, isSetup, installationType);
@@ -315,8 +313,9 @@ import rx.android.schedulers.AndroidSchedulers;
 
   private void updateInstalledUi(Install install) {
     setDownloadBarInvisible();
-    setupActionButton(R.string.open, v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
-        getContext().getPackageManager(), getContext()));
+    setupActionButton(R.string.appview_button_open,
+        v -> AptoideUtils.SystemU.openApp(install.getPackageName(),
+            getContext().getPackageManager(), getContext()));
   }
 
   private void updatePausedUi(Install install, GetApp app, boolean isSetup) {
@@ -367,7 +366,7 @@ import rx.android.schedulers.AndroidSchedulers;
     //check if the app is paid
     if (app.isPaid() && !app.getPay()
         .isPaid()) {
-      actionButton.setText(getContext().getString(R.string.buy) + " (" + app.getPay()
+      actionButton.setText(getContext().getString(R.string.appview_button_buy) + " (" + app.getPay()
           .getSymbol() + " " + app.getPay()
           .getPrice() + ")");
       actionButton.setOnClickListener(v -> buyApp(app));
@@ -379,8 +378,9 @@ import rx.android.schedulers.AndroidSchedulers;
                 .setPath(path);
             app.getPay()
                 .setPaid();
-            setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes()
-                .getVersions(), displayable));
+            setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app,
+                getApp.getNodes()
+                    .getVersions(), displayable));
             actionButton.performClick();
           }
         }
@@ -388,8 +388,9 @@ import rx.android.schedulers.AndroidSchedulers;
       getContext().registerReceiver(receiver, new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
     } else {
       isUpdate = false;
-      setupActionButton(R.string.install, installOrUpgradeListener(app, getApp.getNodes()
-          .getVersions(), displayable));
+      setupActionButton(R.string.appview_button_install, installOrUpgradeListener(app,
+          getApp.getNodes()
+              .getVersions(), displayable));
       if (displayable.isShouldInstall()) {
         actionButton.postDelayed(() -> {
           if (displayable.isVisible() && displayable.isShouldInstall()) {
@@ -497,7 +498,6 @@ import rx.android.schedulers.AndroidSchedulers;
     @StringRes final int installOrUpgradeMsg =
         this.isUpdate ? R.string.updating_msg : R.string.installing_msg;
     int downloadAction = isUpdate ? Download.ACTION_UPDATE : Download.ACTION_INSTALL;
-    PermissionManager permissionManager = new PermissionManager();
     final View.OnClickListener installHandler = v -> {
       if (installOrUpgradeMsg == R.string.installing_msg) {
         Analytics.ClickedOnInstallButton.clicked(app);
@@ -505,8 +505,8 @@ import rx.android.schedulers.AndroidSchedulers;
       }
 
       showRootInstallWarningPopup(context);
-      compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
-          .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionRequest))
+      compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
+          .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
           .map(success -> new DownloadFactory().create(displayable.getPojo()
               .getNodes()
               .getMeta()
@@ -628,7 +628,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
       actionResume.setOnClickListener(view -> {
         PermissionManager permissionManager = new PermissionManager();
-        compositeSubscription.add(permissionManager.requestDownloadAccess(permissionRequest)
+        compositeSubscription.add(permissionManager.requestDownloadAccess(permissionService)
             .flatMap(permissionGranted -> permissionManager.requestExternalStoragePermission(
                 (PermissionService) getContext()))
             .flatMap(success -> installManager.install(download)

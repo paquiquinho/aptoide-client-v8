@@ -77,17 +77,28 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   }
 
   @Override public void setPost(AggregatedStore card, int position) {
-    ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters().get(0).getPrimaryAvatar(),
-            this.headerAvatar1);
-    ImageLoader.with(itemView.getContext())
-        .loadWithShadowCircleTransform(card.getPosters().get(1).getPrimaryAvatar(),
-            this.headerAvatar2);
+    if (card.getPosters() != null) {
+      if (card.getPosters()
+          .size() > 0) {
+        ImageLoader.with(itemView.getContext())
+            .loadWithShadowCircleTransform(card.getPosters()
+                .get(0)
+                .getPrimaryAvatar(), this.headerAvatar1);
+      }
+      if (card.getPosters()
+          .size() > 1) {
+        ImageLoader.with(itemView.getContext())
+            .loadWithShadowCircleTransform(card.getPosters()
+                .get(1)
+                .getPrimaryAvatar(), this.headerAvatar2);
+      }
+    }
     this.headerNames.setText(getCardHeaderNames(card));
     this.headerTimestamp.setText(
         dateCalculator.getTimeSinceDate(itemView.getContext(), card.getLatestUpdate()));
     this.storeNameBodyHeader.setText(card.getStoreName());
-    ImageLoader.with(itemView.getContext()).load(card.getStoreAvatar(), storeAvatarFollow);
+    ImageLoader.with(itemView.getContext())
+        .load(card.getStoreAvatar(), storeAvatarFollow);
     this.storeNameFollow.setText(card.getStoreName());
     this.storeNumberFollowers.setText(String.valueOf(card.getSubscribers()));
     this.storeNumberApps.setText(String.valueOf(card.getAppsNumber()));
@@ -96,7 +107,7 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
     minimalCardContainer.removeAllViews();
     minimalCardContainer.addView(minimalCardViewFactory.getView(card, card.getMinimalPosts(),
         MinimalCardViewFactory.MINIMUM_NUMBER_OF_VISILIBE_MINIMAL_CARDS, inflater,
-        itemView.getContext()));
+        itemView.getContext(), position));
 
     this.followStoreButton.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
         new FollowStoreCardTouchEvent(card, card.getStoreId(), card.getStoreName(),
@@ -108,11 +119,16 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
 
   public String getCardHeaderNames(AggregatedStore card) {
     StringBuilder headerNamesStringBuilder = new StringBuilder();
-    List<Poster> posters = card.getPosters().subList(0, 2);
-    for (Poster poster : posters) {
-      headerNamesStringBuilder.append(poster.getPrimaryName()).append(", ");
+    if (card.getPosters()
+        .size() >= 2) {
+      List<Poster> posters = card.getPosters()
+          .subList(0, 2);
+      for (Poster poster : posters) {
+        headerNamesStringBuilder.append(poster.getPrimaryName())
+            .append(", ");
+      }
+      headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
     }
-    headerNamesStringBuilder.setLength(headerNamesStringBuilder.length() - 2);
     return headerNamesStringBuilder.toString();
   }
 
@@ -128,7 +144,8 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
       latestAppView = inflater.inflate(R.layout.social_timeline_latest_app, appsContainer, false);
       latestAppIcon = (ImageView) latestAppView.findViewById(R.id.social_timeline_latest_app_icon);
       latestAppName = (TextView) latestAppView.findViewById(R.id.social_timeline_latest_app_name);
-      ImageLoader.with(itemView.getContext()).load(latestApp.getIcon(), latestAppIcon);
+      ImageLoader.with(itemView.getContext())
+          .load(latestApp.getIcon(), latestAppIcon);
       latestAppName.setText(latestApp.getName());
       appsContainer.addView(latestAppView);
       apps.put(latestAppView, latestApp.getId());
@@ -138,10 +155,11 @@ public class AggregatedStoreViewHolder extends PostViewHolder<AggregatedStore> {
   }
 
   private void showMorePostersLabel(AggregatedStore card) {
-    if (card.getPosters().size() > 2) {
-      morePostersLabel.setText(
-          String.format(itemView.getContext().getString(R.string.timeline_short_plus),
-              String.valueOf(card.getPosters().size() - 2)));
+    if (card.getPosters()
+        .size() > 2) {
+      morePostersLabel.setText(String.format(itemView.getContext()
+          .getString(R.string.timeline_short_plus), String.valueOf(card.getPosters()
+          .size() - 2)));
       morePostersLabel.setVisibility(View.VISIBLE);
     } else {
       morePostersLabel.setVisibility(View.INVISIBLE);
