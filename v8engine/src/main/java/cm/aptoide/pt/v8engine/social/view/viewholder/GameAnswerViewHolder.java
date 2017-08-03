@@ -1,5 +1,8 @@
 package cm.aptoide.pt.v8engine.social.view.viewholder;
 
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +15,8 @@ import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.GameAnswer;
 import cm.aptoide.pt.v8engine.social.data.GameAnswerTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.Recommendation;
+import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
 /**
@@ -25,7 +30,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     private final ImageView headerIcon;
     private final TextView headerTitle;
     private final TextView headerSubTitle;
-
+    private final SpannableFactory spannableFactory;
     private final ImageView appIcon;
     private final Button getApp;
     private final TextView answerStatus;
@@ -36,10 +41,11 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
 
 
-    public GameAnswerViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject) {
+    public GameAnswerViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject, SpannableFactory spannableFactory) {
         super(itemView);
 
         this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
+        this.spannableFactory = spannableFactory;
 
         score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score);
         leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard);
@@ -66,13 +72,19 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.answerStatus.setText(card.getStatus());
         this.answerMessage.setText(card.getMessage());
 
+        this.getApp.setText("get app");
+
         ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
-        this.headerTitle.setText("Aptoide Timeline Quiz");
+        this.headerTitle.setText(getStyledTitle(itemView.getContext()));
         this.headerSubTitle.setText("Card 1/10");
 
-        //This needs work. Quite a lot of it I believe...
         getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-                new GameAnswerTouchEvent(card, CardTouchEvent.Type.BODY, position)));
+                new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
 
+    }
+
+    private Spannable getStyledTitle(Context context) {
+        return spannableFactory.createColorSpan("Aptoide Timeline Quiz",
+            ContextCompat.getColor(context, R.color.card_store_title));
     }
 }

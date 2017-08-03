@@ -24,6 +24,9 @@ import cm.aptoide.pt.v8engine.social.data.AppUpdateCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.FollowStoreCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.Game;
+import cm.aptoide.pt.v8engine.social.data.Game2;
+import cm.aptoide.pt.v8engine.social.data.GameAnswer;
 import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
@@ -416,10 +419,18 @@ public class TimelinePresenter implements Presenter {
               AggregatedRecommendation card = (AggregatedRecommendation) post;
               timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                   AppViewFragment.OpenType.OPEN_ONLY);
+            } else if (type.isGame()) {
+              GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
+              GameAnswer gameAnswer = mapToGameAnswer(event);
+              view.swapPost(gameAnswer, event.getCardPosition());
+              Logger.d(this.getClass()
+                  .getCanonicalName(), "Clicked on: " + event.getAnswerText());
             }
-            else if(type.isGame()){
-                GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
-                Logger.d(this.getClass().getCanonicalName(), "Clicked on: "+event.getAnswerText());
+            else if(type.equals(CardType.GAMEANSWER)){
+              GameAnswer card = (GameAnswer) post;
+              timelineNavigation.navigateToAppView(card.getRightAnswer().getId(), card.getRightAnswer().getPackageName(),
+                  AppViewFragment.OpenType.OPEN_ONLY);
+
             }
           }
         })
@@ -429,6 +440,47 @@ public class TimelinePresenter implements Presenter {
           crashReport.log(throwable);
           view.showGenericError();
         });
+  }
+
+  private GameAnswer mapToGameAnswer(GameCardTouchEvent event) {
+
+    String message;
+    String status;
+    GameAnswer answer;
+    Game card;
+
+    card = (Game) event.getCard();
+
+    if(card instanceof Game2){
+      if(card.getRightAnswer().getIcon() == event.getAnswerText()){
+        status = "Correct";
+        message = "You're good at this!";
+        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+      }
+      else{
+        status = "Wrong";
+        message = "You'll have to try again!";
+        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+      }
+    }
+    else{
+      if(card.getRightAnswer().getName() == event.getAnswerText()){
+        status = "Correct";
+        message = "You're good at this!";
+        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+      }
+      else{
+        status = "Wrong";
+        message = "You'll have to try again!";
+        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+      }
+    }
+
+    return answer;
   }
 
   private void clickOnLikeSocialPost() {

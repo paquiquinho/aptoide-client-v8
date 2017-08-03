@@ -19,8 +19,9 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
     private final TextView score;
     private final TextView leaderboard;
-    private final ImageView questionIcon;
-    private final TextView question;
+    private View wrapper;
+    private ImageView questionIcon;
+    private TextView question;
     private final TextView answerLeft;
     private final TextView answerRight;
     private final ImageView answerLeftIcon;
@@ -38,8 +39,6 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
         score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
         leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
-        questionIcon = (ImageView) itemView.findViewById(R.id.game_card_question3_icon);
-        question = (TextView) itemView.findViewById(R.id.game_card_question3_question);
         answerLeft = (TextView) itemView.findViewById(R.id.game_card_question3_answer_left);
         answerRight = (TextView) itemView.findViewById(R.id.game_card_question3_answer_right);
         answerLeftIcon = (ImageView) itemView.findViewById(R.id.game_card_question3_icon_left);
@@ -65,15 +64,18 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         this.headerSubTitle.setText("Card 1/10");
 
         if (card.getQuestionIcon() == null){
-            questionIcon.setVisibility(View.GONE);
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(0, 100, 0, 50);
-            lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-            question.setLayoutParams(lp);
+            itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);
+            wrapper = itemView.findViewById(R.id.question);
+            wrapper.setVisibility(View.VISIBLE);
+            question = (TextView) wrapper.findViewById(R.id.game_card_question);
 
         }
         else{
-            questionIcon.setVisibility(View.VISIBLE);
+            itemView.findViewById(R.id.question).setVisibility(View.GONE);
+            wrapper = itemView.findViewById(R.id.icon_question);
+            wrapper.setVisibility(View.VISIBLE);
+            questionIcon = (ImageView) wrapper.findViewById(R.id.game_card_questionIcon);
+            question = (TextView) wrapper.findViewById(R.id.game_card_question);
             ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
         }
         this.question.setText(card.getQuestion());

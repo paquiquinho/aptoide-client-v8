@@ -10,6 +10,7 @@ import cm.aptoide.pt.v8engine.social.view.viewholder.AppUpdateViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.Game1ViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.Game2ViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.Game3ViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.GameAnswerViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.MediaViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PopularAppViewHolder;
 import cm.aptoide.pt.v8engine.social.view.viewholder.PostViewHolder;
@@ -127,12 +128,16 @@ public class CardViewHolderFactory {
       case GAME1:
         return new Game1ViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_game1_item, parent, false), cardTouchEventPublishSubject);
-        case GAME2:
-            return new Game2ViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.timeline_game2_item, parent, false), cardTouchEventPublishSubject);
-        case GAME3:
-            return new Game3ViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.timeline_game3_item, parent, false), cardTouchEventPublishSubject);
+      case GAME2:
+        return new Game2ViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game2_item, parent, false), cardTouchEventPublishSubject);
+      case GAME3:
+        return new Game3ViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game3_item, parent, false), cardTouchEventPublishSubject);
+      case GAMEANSWER:
+        return new GameAnswerViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.timeline_game_answer_item, parent, false),
+            cardTouchEventPublishSubject, spannableFactory);
       default:
         throw new IllegalStateException("Wrong cardType" + cardType.name());
     }
