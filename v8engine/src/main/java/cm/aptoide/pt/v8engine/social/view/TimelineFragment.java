@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,9 @@ import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
 import cm.aptoide.pt.v8engine.social.presenter.TimelineNavigator;
 import cm.aptoide.pt.v8engine.social.presenter.TimelinePresenter;
+import cm.aptoide.pt.v8engine.social.view.viewholder.Game1ViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.Game2ViewHolder;
+import cm.aptoide.pt.v8engine.social.view.viewholder.Game3ViewHolder;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
 import cm.aptoide.pt.v8engine.timeline.TimelineAnalytics;
@@ -485,4 +489,47 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     }
     list.smoothScrollToPosition(0);
   }
+
+  ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+    @Override public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+        RecyclerView.ViewHolder target) {
+      return false;
+    }
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+      //Remove swiped item from list and notify the RecyclerView
+      if(viewHolder instanceof Game1ViewHolder){
+        Game1ViewHolder view = (Game1ViewHolder) viewHolder;
+        if(swipeDir == ItemTouchHelper.LEFT) {
+          view.onPostDismissedLeft(view.getCard(), view.getAdapterPosition());
+        }
+        else if(swipeDir == ItemTouchHelper.RIGHT){
+          view.onPostDismissedRight(view.getCard(), view.getAdapterPosition());
+        }
+      }
+      if (viewHolder instanceof Game2ViewHolder){
+        Game2ViewHolder view = (Game2ViewHolder) viewHolder;
+        if(swipeDir == ItemTouchHelper.LEFT) {
+          view.onPostDismissedLeft(view.getCard(), view.getAdapterPosition());
+        }
+        else if(swipeDir == ItemTouchHelper.RIGHT){
+          view.onPostDismissedRight(view.getCard(), view.getAdapterPosition());
+        }
+      }
+      if (viewHolder instanceof Game3ViewHolder){
+        Game3ViewHolder view = (Game3ViewHolder) viewHolder;
+        if(swipeDir == ItemTouchHelper.LEFT) {
+          view.onPostDismissedLeft(view.getCard(), view.getAdapterPosition());
+        }
+        else if(swipeDir == ItemTouchHelper.RIGHT){
+          view.onPostDismissedRight(view.getCard(), view.getAdapterPosition());
+        }
+      }
+    }
+  };
+
+  ItemTouchHelper item = new ItemTouchHelper(simpleItemTouchCallback);
+
 }

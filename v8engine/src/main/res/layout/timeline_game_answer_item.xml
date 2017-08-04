@@ -88,9 +88,21 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_leaderboard_icon"
-          android:layout_marginRight="5dp"
+          android:layout_marginRight="35dp"
           android:layout_marginTop="18dp"
           android:text="2000"
+          style="@style/Aptoide.TextView.Regular.XS.Grey"
+          />
+
+      <TextView
+          android:id="@+id/score_increment"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_leaderboard_icon"
+          android:layout_marginTop="18dp"
+          android:layout_marginRight="5dp"
+          android:text="(-15)"
+          android:textColor="@color/green"
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 
@@ -100,7 +112,7 @@
           android:layout_width="15dp"
           android:layout_height="15dp"
           android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_score"
-          android:layout_marginRight="5dp"
+          android:layout_marginRight="3dp"
           android:layout_marginTop="@dimen/appstimeline_card_icon"
           android:src="@drawable/appstimeline_recommendation_compass_icon"
           />
@@ -163,7 +175,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/get_app_icon"
-            android:textColor="@color/green_700"
+            android:textColor="@color/green"
             android:layout_marginLeft="110dp"
             android:layout_marginTop="25dp"
             style="@style/Aptoide.TextView.Medium.L.Black"

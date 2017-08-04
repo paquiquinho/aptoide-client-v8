@@ -127,13 +127,15 @@ public class CardViewHolderFactory {
             .inflate(R.layout.timeline_login_item, parent, false), cardTouchEventPublishSubject);
       case GAME1:
         return new Game1ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_game1_item, parent, false), cardTouchEventPublishSubject);
+            .inflate(R.layout.timeline_game1_item, parent, false), cardTouchEventPublishSubject, spannableFactory);
       case GAME2:
         return new Game2ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_game2_item, parent, false), cardTouchEventPublishSubject);
+            .inflate(R.layout.timeline_game2_item, parent, false), cardTouchEventPublishSubject,
+            spannableFactory);
       case GAME3:
         return new Game3ViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.timeline_game3_item, parent, false), cardTouchEventPublishSubject);
+            .inflate(R.layout.timeline_game3_item, parent, false), cardTouchEventPublishSubject,
+            spannableFactory);
       case GAMEANSWER:
         return new GameAnswerViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.timeline_game_answer_item, parent, false),

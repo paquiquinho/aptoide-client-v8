@@ -22,14 +22,15 @@ public class GameAnswer implements Post {
     private final String abUrl;
     private boolean isLiked;
     private final CardType cardType;
+    private final int points;
 
     public GameAnswer(String cardID, App rightAnswer, List<String> leaderboard, int score, int gRanking, int lRanking,
-                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType){
+                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType, int points){
 
         this.cardID = cardID;
         this.rightAnswer = rightAnswer;
         this.leaderboard = leaderboard;
-        this.score = score;
+        this.score = score+points;
         this.gRanking = gRanking;
         this.lRanking = lRanking;
         this.fRanking = fRanking;
@@ -38,6 +39,7 @@ public class GameAnswer implements Post {
         this.abUrl = abUrl;
         this.isLiked = isLiked;
         this.cardType = cardType;
+        this.points = points;
     }
 
     @Override
@@ -100,5 +102,9 @@ public class GameAnswer implements Post {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getPoints() {
+        return points;
     }
 }

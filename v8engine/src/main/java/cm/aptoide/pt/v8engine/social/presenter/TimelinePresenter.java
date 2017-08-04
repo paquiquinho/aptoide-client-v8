@@ -448,6 +448,7 @@ public class TimelinePresenter implements Presenter {
     String status;
     GameAnswer answer;
     Game card;
+    int points = 10;
 
     card = (Game) event.getCard();
 
@@ -456,13 +457,13 @@ public class TimelinePresenter implements Presenter {
         status = "Correct";
         message = "You're good at this!";
         answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
       }
       else{
         status = "Wrong";
         message = "You'll have to try again!";
         answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points/2);
       }
     }
     else{
@@ -470,13 +471,13 @@ public class TimelinePresenter implements Presenter {
         status = "Correct";
         message = "You're good at this!";
         answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
       }
       else{
         status = "Wrong";
         message = "You'll have to try again!";
         answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER);
+            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points/2);
       }
     }
 
