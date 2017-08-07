@@ -3,10 +3,8 @@ package cm.aptoide.pt.v8engine.social.presenter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -44,6 +42,7 @@ import cm.aptoide.pt.v8engine.social.data.StoreLatestApps;
 import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelineStatsPost;
 import cm.aptoide.pt.v8engine.social.data.TimelineStatsTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
 import cm.aptoide.pt.v8engine.social.view.TimelineView;
 import cm.aptoide.pt.v8engine.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.v8engine.store.StoreUtilsProxy;
@@ -152,6 +151,8 @@ public class TimelinePresenter implements Presenter {
     listenToScrollDown();
 
     handleFabClick();
+
+    handlePostNavigation();
   }
 
   @Override public void saveState(Bundle state) {
@@ -159,6 +160,24 @@ public class TimelinePresenter implements Presenter {
 
   @Override public void restoreState(Bundle state) {
 
+  }
+
+  private void handlePostNavigation() {
+    view.getLifecycle()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> timelineNavigation.postNavigation()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(__ -> view.showProgressIndicator())
+            .flatMapSingle(cardId -> Single.zip(
+                accountManager.isLoggedIn() || userId != null ? timeline.getTimelineStats()
+                    : timeline.getTimelineStatisticsPost(), timeline.getCards(cardId),
+                (post, posts) -> mergeStatsPostWithPosts(post, posts)))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cards -> showCardsAndHideProgress(cards))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(cards -> {
+        }, throwable -> view.showGenericError());
   }
 
   private void listenToScrollUp() {
@@ -194,7 +213,7 @@ public class TimelinePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(AndroidSchedulers.mainThread())
         .flatMap(__ -> view.floatingActionButtonClicked()
-            .doOnNext(__2 -> fragmentNavigator.navigateTo(new PostFragment())))
+            .doOnNext(__2 -> fragmentNavigator.navigateTo(PostFragment.newInstanceFromTimeline())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> view.showGenericError());
@@ -529,20 +548,16 @@ public class TimelinePresenter implements Presenter {
             .getAbUrl()), throwable -> crashReport.log(throwable));
   }
 
-  //todo missing  && !store.hasPublicAccess()
   private boolean showSetUserOrStoreToPublic(Account account) {
-    final Account.Access userAccess = account.getAccess();
-    final Store store = account.getStore();
-    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (store
-        != null);
+    //TODO missing this part... at the moment we don't know if the store is public or private, after login
+    //return account != null && !account.isPublicUser() && account.hasStore() && !account.isPublicStore();
+    // user is private and has a private store
+    return account != null && !account.isPublicUser() && account.hasStore();
   }
 
   private boolean showCreateStore(Account account) {
-    Account.Access userAccess = account.getAccess();
-    return (userAccess == Account.Access.PRIVATE || userAccess == Account.Access.UNLISTED) && (
-        account.getStore() == null
-            || TextUtils.isEmpty(account.getStore()
-            .getName()));
+    // user is private and does not have a store
+    return account != null && !account.isPublicUser() && !account.hasStore();
   }
 
   private void handleLoginMessageClick() {
@@ -705,7 +720,7 @@ public class TimelinePresenter implements Presenter {
                       () -> view.showCreateStoreMessage(SocialAction.LIKE));
                 }
                 return Completable.fromAction(
-                    () -> view.showSharePreview(cardTouchEvent.getCard()));
+                    () -> view.showSharePreview(cardTouchEvent.getCard(), account));
               }
               return Completable.fromAction(() -> view.showLoginPromptWithAction());
             }))
@@ -733,11 +748,21 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
+  private Completable syncAccount(Account account, ShareEvent shareEvent) {
+    return Single.fromCallable(() -> account.getAccess() != shareEvent.getAccess())
+        .flatMapCompletable(shouldUpdateAccount -> {
+          if (shouldUpdateAccount) {
+            return accountManager.syncCurrentAccount(shareEvent.getAccess());
+          }
+          return Completable.complete();
+        });
+  }
+
   private void sharePostConfirmation() {
     view.getLifecycle()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.shareConfirmation()
-            .flatMapSingle(post -> timeline.sharePost(post)
+            .flatMapSingle(shareEvent -> timeline.sharePost(shareEvent.getPost())
                 .doOnSuccess(cardId -> view.showShareSuccessMessage())))
         .doOnNext(cardid -> timelineAnalytics.sendSocialCardPreviewActionEvent(
             TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE))
