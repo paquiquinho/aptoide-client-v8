@@ -135,19 +135,19 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
                 new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon())));
         }
         else{
-            answerLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon()))));
+            cardTouchEventPublishSubject.onNext(
+                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon())));
         }
     }
 
     public void onPostDismissedRight(Game2 card, int position){
         if(rand<0.5) {
-            answerRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon()))));
+            cardTouchEventPublishSubject.onNext(
+                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon())));
         }
         else{
-            answerRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon()))));
+            cardTouchEventPublishSubject.onNext(
+                new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon())));
         }
     }
 

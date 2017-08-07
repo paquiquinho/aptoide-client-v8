@@ -202,6 +202,8 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     loginPrompt = PublishRelay.create();
     helper = RecyclerViewPositionHelper.createHelper(list);
+    item.attachToRecyclerView(list);
+
     // Pull-to-refresh
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -498,37 +500,46 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     }
 
     @Override
+    public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+      if (!((viewHolder instanceof Game1ViewHolder)||(viewHolder instanceof Game2ViewHolder)||(viewHolder instanceof Game3ViewHolder))) return 0;
+      return super.getSwipeDirs(recyclerView, viewHolder);
+    }
+
+    @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-      //Remove swiped item from list and notify the RecyclerView
+
+      int position = viewHolder.getAdapterPosition();
+
       if(viewHolder instanceof Game1ViewHolder){
         Game1ViewHolder view = (Game1ViewHolder) viewHolder;
         if(swipeDir == ItemTouchHelper.LEFT) {
-          view.onPostDismissedLeft(view.getCard(), view.getAdapterPosition());
+          view.onPostDismissedLeft(view.getCard(), position);
         }
         else if(swipeDir == ItemTouchHelper.RIGHT){
-          view.onPostDismissedRight(view.getCard(), view.getAdapterPosition());
+          view.onPostDismissedRight(view.getCard(), position);
         }
       }
       if (viewHolder instanceof Game2ViewHolder){
         Game2ViewHolder view = (Game2ViewHolder) viewHolder;
         if(swipeDir == ItemTouchHelper.LEFT) {
-          view.onPostDismissedLeft(view.getCard(), view.getAdapterPosition());
+          view.onPostDismissedLeft(view.getCard(), position);
         }
         else if(swipeDir == ItemTouchHelper.RIGHT){
-          view.onPostDismissedRight(view.getCard(), view.getAdapterPosition());
+          view.onPostDismissedRight(view.getCard(), position);
         }
       }
       if (viewHolder instanceof Game3ViewHolder){
         Game3ViewHolder view = (Game3ViewHolder) viewHolder;
         if(swipeDir == ItemTouchHelper.LEFT) {
-          view.onPostDismissedLeft(view.getCard(), view.getAdapterPosition());
+          view.onPostDismissedLeft(view.getCard(), position);
         }
         else if(swipeDir == ItemTouchHelper.RIGHT){
-          view.onPostDismissedRight(view.getCard(), view.getAdapterPosition());
+          view.onPostDismissedRight(view.getCard(), position);
         }
       }
     }
   };
+
 
   ItemTouchHelper item = new ItemTouchHelper(simpleItemTouchCallback);
 
