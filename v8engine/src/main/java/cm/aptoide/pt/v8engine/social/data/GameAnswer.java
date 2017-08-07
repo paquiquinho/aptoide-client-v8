@@ -23,9 +23,10 @@ public class GameAnswer implements Post {
     private boolean isLiked;
     private final CardType cardType;
     private final int points;
+    private final boolean loginButton;
 
     public GameAnswer(String cardID, App rightAnswer, List<String> leaderboard, int score, int gRanking, int lRanking,
-                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType, int points){
+                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType, int points, boolean showLoginButton){
 
         this.cardID = cardID;
         this.rightAnswer = rightAnswer;
@@ -40,6 +41,7 @@ public class GameAnswer implements Post {
         this.isLiked = isLiked;
         this.cardType = cardType;
         this.points = points;
+        this.loginButton = showLoginButton;
     }
 
     @Override
@@ -106,5 +108,9 @@ public class GameAnswer implements Post {
 
     public int getPoints() {
         return points;
+    }
+
+    public boolean getLoginButton() {
+        return loginButton;
     }
 }

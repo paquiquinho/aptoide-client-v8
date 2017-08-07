@@ -152,9 +152,10 @@
         <TextView
             android:id="@+id/game_card_question3_answer_left"
             style="@style/Aptoide.TextView.Regular.XS.Grey"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/game_card_question3_icon_left"
+            android:textAlignment="center"
             android:padding="10dp"
             android:layout_marginTop="145dp"
             android:text="Answer1"
@@ -173,9 +174,10 @@
         <TextView
             android:id="@+id/game_card_question3_answer_right"
             style="@style/Aptoide.TextView.Regular.XS.Grey"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/game_card_question3_icon_right"
+            android:textAlignment="center"
             android:padding="10dp"
             android:layout_marginTop="145dp"
             android:text="Answer2"

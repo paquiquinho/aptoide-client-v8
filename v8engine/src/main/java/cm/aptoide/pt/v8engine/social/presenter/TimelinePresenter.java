@@ -369,90 +369,93 @@ public class TimelinePresenter implements Presenter {
         .doOnNext(cardTouchEvent -> timelineAnalytics.sendClickOnMediaBodyEvent(cardTouchEvent))
         .doOnNext(cardTouchEvent -> timeline.knockWithSixpackCredentials(cardTouchEvent.getCard()
             .getAbUrl()))
-        .doOnNext(cardTouchEvent -> {
-          final Post post = cardTouchEvent.getCard();
-          final CardType type = post.getType();
-          if (type.isMedia()) {
-            Media card = (Media) post;
-            card.getMediaLink()
-                .launch();
-          } else {
-            if (type.equals(CardType.RECOMMENDATION)) {
-              Recommendation card = (Recommendation) post;
-              timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                  AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (type.equals(CardType.STORE)) {
-              StoreAppCardTouchEvent storeAppCardTouchEvent =
-                  (StoreAppCardTouchEvent) cardTouchEvent;
-              navigateToAppView(storeAppCardTouchEvent);
-            } else if (type.equals(CardType.SOCIAL_STORE) || type.equals(
-                CardType.AGGREGATED_SOCIAL_STORE)) {
-              if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
-                navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
-              } else if (cardTouchEvent instanceof FollowStoreCardTouchEvent) {
-                FollowStoreCardTouchEvent followStoreCardTouchEvent =
-                    ((FollowStoreCardTouchEvent) cardTouchEvent);
-                followStore(followStoreCardTouchEvent.getStoreId(),
-                    followStoreCardTouchEvent.getStoreName());
-              } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
-                StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
-                timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
-                    storeCardTouchEvent.getStoreTheme());
-              }
-            } else if (type.equals(CardType.UPDATE)) {
-              AppUpdate card = (AppUpdate) post;
-              if (cardTouchEvent instanceof AppUpdateCardTouchEvent) {
-                permissionManager.requestExternalStoragePermission(permissionRequest)
-                    .flatMap(success -> {
-                      if (installManager.showWarning()) {
-                        view.showRootAccessDialog();
-                      }
-                      return timeline.updateApp(cardTouchEvent);
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .distinctUntilChanged(install -> install.getState())
-                    .doOnNext(install -> {
-                      // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
-                      ((AppUpdate) post).setInstallationStatus(install.getState());
-                      view.swapPost(post,
-                          ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
-                    })
-                    .subscribe(downloadProgress -> {
-                    }, throwable -> Logger.d(this.getClass()
-                        // TODO: 26/06/2017 error handling
-                        .getName(), "error"));
+        .flatMapSingle(cardTouchEvent -> accountManager.accountStatus()
+            .first()
+            .toSingle()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess(account -> {
+              final Post post = cardTouchEvent.getCard();
+              final CardType type = post.getType();
+              if (type.isMedia()) {
+                Media card = (Media) post;
+                card.getMediaLink()
+                    .launch();
               } else {
-                timelineNavigation.navigateToAppView(card.getAppUpdateId(), card.getPackageName(),
-                    AppViewFragment.OpenType.OPEN_ONLY);
+                if (type.equals(CardType.RECOMMENDATION)) {
+                  Recommendation card = (Recommendation) post;
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                      AppViewFragment.OpenType.OPEN_ONLY);
+                } else if (type.equals(CardType.STORE)) {
+                  StoreAppCardTouchEvent storeAppCardTouchEvent =
+                      (StoreAppCardTouchEvent) cardTouchEvent;
+                  navigateToAppView(storeAppCardTouchEvent);
+                } else if (type.equals(CardType.SOCIAL_STORE) || type.equals(
+                    CardType.AGGREGATED_SOCIAL_STORE)) {
+                  if (cardTouchEvent instanceof StoreAppCardTouchEvent) {
+                    navigateToAppView((StoreAppCardTouchEvent) cardTouchEvent);
+                  } else if (cardTouchEvent instanceof FollowStoreCardTouchEvent) {
+                    FollowStoreCardTouchEvent followStoreCardTouchEvent =
+                        ((FollowStoreCardTouchEvent) cardTouchEvent);
+                    followStore(followStoreCardTouchEvent.getStoreId(),
+                        followStoreCardTouchEvent.getStoreName());
+                  } else if (cardTouchEvent instanceof StoreCardTouchEvent) {
+                    StoreCardTouchEvent storeCardTouchEvent = (StoreCardTouchEvent) cardTouchEvent;
+                    timelineNavigation.navigateToStoreHome(storeCardTouchEvent.getStoreName(),
+                        storeCardTouchEvent.getStoreTheme());
+                  }
+                } else if (type.equals(CardType.UPDATE)) {
+                  AppUpdate card = (AppUpdate) post;
+                  if (cardTouchEvent instanceof AppUpdateCardTouchEvent) {
+                    permissionManager.requestExternalStoragePermission(permissionRequest)
+                        .flatMap(success -> {
+                          if (installManager.showWarning()) {
+                            view.showRootAccessDialog();
+                          }
+                          return timeline.updateApp(cardTouchEvent);
+                        })
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .distinctUntilChanged(install -> install.getState())
+                        .doOnNext(install -> {
+                          // TODO: 26/06/2017 get this logic out of here?  this is not working properly yet
+                          ((AppUpdate) post).setInstallationStatus(install.getState());
+                          view.swapPost(post,
+                              ((AppUpdateCardTouchEvent) cardTouchEvent).getCardPosition());
+                        })
+                        .subscribe(downloadProgress -> {
+                        }, throwable -> Logger.d(this.getClass()
+                            // TODO: 26/06/2017 error handling
+                            .getName(), "error"));
+                  } else {
+                    timelineNavigation.navigateToAppView(card.getAppUpdateId(),
+                        card.getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                  }
+                } else if (type.equals(CardType.POPULAR_APP)) {
+                  PopularApp card = (PopularApp) post;
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                      AppViewFragment.OpenType.OPEN_ONLY);
+                } else if (type.equals(CardType.SOCIAL_RECOMMENDATION) || type.equals(
+                    CardType.SOCIAL_INSTALL) || type.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
+                  RatedRecommendation card = (RatedRecommendation) post;
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                      AppViewFragment.OpenType.OPEN_ONLY);
+                } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
+                  AggregatedRecommendation card = (AggregatedRecommendation) post;
+                  timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
+                      AppViewFragment.OpenType.OPEN_ONLY);
+                } else if (type.isGame()) {
+                  GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
+                  GameAnswer gameAnswer = mapToGameAnswer(event, account.isLoggedIn());
+                  view.swapPost(gameAnswer, event.getCardPosition());
+                  Logger.d(this.getClass()
+                      .getCanonicalName(), "Clicked on: " + event.getAnswerText());
+                } else if (type.equals(CardType.GAMEANSWER)) {
+                  GameAnswer card = (GameAnswer) post;
+                  timelineNavigation.navigateToAppView(card.getRightAnswer()
+                      .getId(), card.getRightAnswer()
+                      .getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                }
               }
-            } else if (type.equals(CardType.POPULAR_APP)) {
-              PopularApp card = (PopularApp) post;
-              timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                  AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (type.equals(CardType.SOCIAL_RECOMMENDATION) || type.equals(
-                CardType.SOCIAL_INSTALL) || type.equals(CardType.SOCIAL_POST_RECOMMENDATION)) {
-              RatedRecommendation card = (RatedRecommendation) post;
-              timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                  AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (type.equals(CardType.AGGREGATED_SOCIAL_INSTALL)) {
-              AggregatedRecommendation card = (AggregatedRecommendation) post;
-              timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
-                  AppViewFragment.OpenType.OPEN_ONLY);
-            } else if (type.isGame()) {
-              GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
-              GameAnswer gameAnswer = mapToGameAnswer(event);
-              view.swapPost(gameAnswer, event.getCardPosition());
-              Logger.d(this.getClass()
-                  .getCanonicalName(), "Clicked on: " + event.getAnswerText());
-            }
-            else if(type.equals(CardType.GAMEANSWER)){
-              GameAnswer card = (GameAnswer) post;
-              timelineNavigation.navigateToAppView(card.getRightAnswer().getId(), card.getRightAnswer().getPackageName(),
-                  AppViewFragment.OpenType.OPEN_ONLY);
-
-            }
-          }
-        })
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(articleUrl -> {
         }, throwable -> {
@@ -461,7 +464,7 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
-  private GameAnswer mapToGameAnswer(GameCardTouchEvent event) {
+  private GameAnswer mapToGameAnswer(GameCardTouchEvent event, boolean login) {
 
     String message;
     String status;
@@ -471,32 +474,39 @@ public class TimelinePresenter implements Presenter {
 
     card = (Game) event.getCard();
 
-    if(card instanceof Game2){
-      if(card.getRightAnswer().getIcon() == event.getAnswerText()){
+    if (card instanceof Game2) {
+      if (card.getRightAnswer()
+          .getIcon() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
-        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
-      }
-      else{
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points, login);
+      } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points/2);
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2, login);
       }
-    }
-    else{
-      if(card.getRightAnswer().getName() == event.getAnswerText()){
+    } else {
+      if (card.getRightAnswer()
+          .getName() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
-        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
-      }
-      else{
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points, login);
+      } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        answer = new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null, card.getScore(), card.getgRanking(), card.getlRanking(),
-            card.getfRanking(), status, message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points/2);
+        answer =
+            new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
+                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2, login);
       }
     }
 
