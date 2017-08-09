@@ -27,7 +27,6 @@ import cm.aptoide.pt.v8engine.social.data.Game;
 import cm.aptoide.pt.v8engine.social.data.Game2;
 import cm.aptoide.pt.v8engine.social.data.GameAnswer;
 import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.LikeCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
@@ -82,6 +81,7 @@ public class TimelinePresenter implements Presenter {
   private final StoreContext storeContext;
   private final Resources resources;
   private final FragmentNavigator fragmentNavigator;
+  private int score;
 
   public TimelinePresenter(@NonNull TimelineView cardsView, @NonNull Timeline timeline,
       CrashReport crashReport, TimelineNavigation timelineNavigation,
@@ -90,7 +90,7 @@ public class TimelinePresenter implements Presenter {
       StoreUtilsProxy storeUtilsProxy, StoreCredentialsProviderImpl storeCredentialsProvider,
       AptoideAccountManager accountManager, TimelineAnalytics timelineAnalytics, Long userId,
       Long storeId, StoreContext storeContext, Resources resources,
-      FragmentNavigator fragmentNavigator) {
+      FragmentNavigator fragmentNavigator, int score) {
     this.view = cardsView;
     this.timeline = timeline;
     this.crashReport = crashReport;
@@ -108,6 +108,7 @@ public class TimelinePresenter implements Presenter {
     this.storeContext = storeContext;
     this.resources = resources;
     this.fragmentNavigator = fragmentNavigator;
+    this.score = score;
   }
 
   @Override public void present() {
@@ -444,7 +445,7 @@ public class TimelinePresenter implements Presenter {
                   AppViewFragment.OpenType.OPEN_ONLY);
             } else if (type.isGame()) {
               GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
-              GameAnswer gameAnswer = mapToGameAnswer(event, account.isLoggedIn());
+              GameAnswer gameAnswer = mapToGameAnswer(event);
               view.swapPost(gameAnswer, event.getCardPosition());
               Logger.d(this.getClass()
                   .getCanonicalName(), "Clicked on: " + event.getAnswerText());
@@ -464,7 +465,7 @@ public class TimelinePresenter implements Presenter {
         });
   }
 
-  private GameAnswer mapToGameAnswer(GameCardTouchEvent event, boolean login) {
+  private GameAnswer mapToGameAnswer(GameCardTouchEvent event) {
 
     String message;
     String status;
@@ -479,34 +480,38 @@ public class TimelinePresenter implements Presenter {
           .getIcon() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
+        score = view.updateScore(points);
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points, login);
+               score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
+        score = view.updateScore(-points/2);
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2, login);
+                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
       }
     } else {
       if (card.getRightAnswer()
           .getName() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
+        score = view.updateScore(points);
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points, login);
+                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
+        score = view.updateScore(-points/2);
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-                card.getScore(), card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2, login);
+                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
+                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
       }
     }
 

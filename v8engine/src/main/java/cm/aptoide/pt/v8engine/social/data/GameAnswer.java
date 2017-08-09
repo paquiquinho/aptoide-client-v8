@@ -1,5 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import java.util.List;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -23,15 +24,14 @@ public class GameAnswer implements Post {
     private boolean isLiked;
     private final CardType cardType;
     private final int points;
-    private final boolean loginButton;
 
     public GameAnswer(String cardID, App rightAnswer, List<String> leaderboard, int score, int gRanking, int lRanking,
-                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType, int points, boolean showLoginButton){
+                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType, int points){
 
         this.cardID = cardID;
         this.rightAnswer = rightAnswer;
         this.leaderboard = leaderboard;
-        this.score = score+points;
+        this.score = score;
         this.gRanking = gRanking;
         this.lRanking = lRanking;
         this.fRanking = fRanking;
@@ -41,7 +41,6 @@ public class GameAnswer implements Post {
         this.isLiked = isLiked;
         this.cardType = cardType;
         this.points = points;
-        this.loginButton = showLoginButton;
     }
 
     @Override
@@ -74,7 +73,19 @@ public class GameAnswer implements Post {
         return false;
     }
 
-    public App getRightAnswer() {
+  @Override public List<SocialCard.CardComment> getComments() {
+    return null;
+  }
+
+  @Override public long getCommentsNumber() {
+    return 0;
+  }
+
+  @Override public void addComment(SocialCard.CardComment postComment) {
+
+  }
+
+  public App getRightAnswer() {
         return rightAnswer;
     }
 
@@ -110,7 +121,4 @@ public class GameAnswer implements Post {
         return points;
     }
 
-    public boolean getLoginButton() {
-        return loginButton;
-    }
 }

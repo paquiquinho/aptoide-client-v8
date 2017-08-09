@@ -41,6 +41,8 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     private final TextView answerMessage;
     private final Button logIn;
 
+    private int scoreValue;
+
     private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
 
     public GameAnswerViewHolder(View itemView, PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
@@ -50,7 +52,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
         this.spannableFactory = spannableFactory;
 
-        score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score);
+        this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score);
         increment = (TextView) itemView.findViewById(R.id.score_increment);
         leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard);
         appIcon = (ImageView) itemView.findViewById(R.id.get_app_icon);
@@ -65,6 +67,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.headerSubTitle = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_subtitle);
         this.leaderboardIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard_icon);
         this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score_icon);
+
     }
 
     @Override public void setPost(GameAnswer card, int position) {

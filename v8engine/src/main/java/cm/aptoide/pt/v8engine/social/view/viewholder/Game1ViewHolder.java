@@ -39,6 +39,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     private Game1 card;
 
+    private int scoreValue;
+
 
 
     public Game1ViewHolder(View itemView,
@@ -48,7 +50,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
         this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
         this.spannableFactory = spannableFactory;
 
-        score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
+        this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
         leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
         questionIcon = (ImageView) itemView.findViewById(R.id.game_card_question1_icon);
         question = (TextView) itemView.findViewById(R.id.game_card_question1_question);
@@ -70,7 +72,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     public void setPost(Game1 card, int position) {
         this.card = card;
 
-        this.score.setText(String.valueOf(card.getScore()));
+        this.score.setText(String.valueOf(scoreValue));
         this.leaderboard.setText(String.valueOf(card.getgRanking()));
         ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), questionIcon);
         this.question.setText(card.getQuestion());

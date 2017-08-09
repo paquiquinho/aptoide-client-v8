@@ -81,4 +81,6 @@ public interface TimelineView extends View {
   void showPostProgressIndicator();
 
   void hidePostProgressIndicator();
+
+  int updateScore(int score);
 }

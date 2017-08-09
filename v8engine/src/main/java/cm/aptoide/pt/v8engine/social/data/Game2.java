@@ -1,8 +1,10 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
 import cm.aptoide.pt.v8engine.social.data.CardType;
 import cm.aptoide.pt.v8engine.social.data.Game;
+import java.util.List;
 
 /**
  * Created by franciscocalado on 7/31/17.
@@ -54,5 +56,17 @@ public class Game2 extends Game {
 
     @Override public boolean isLikeFromClick() {
         return likedFromClick;
+    }
+
+    @Override public List<SocialCard.CardComment> getComments() {
+        return null;
+    }
+
+    @Override public long getCommentsNumber() {
+        return 0;
+    }
+
+    @Override public void addComment(SocialCard.CardComment postComment) {
+
     }
 }

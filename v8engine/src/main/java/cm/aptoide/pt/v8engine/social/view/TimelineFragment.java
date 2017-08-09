@@ -126,6 +126,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private DateCalculator dateCalculator;
   private boolean postIndicator;
   private boolean progressIndicator;
+  private int score;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
       StoreContext storeContext) {
@@ -183,6 +184,9 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), new TimelineResponseCardMapper(), tokenInvalidator,
         sharedPreferences);
+    score = 0;
+
+
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
@@ -265,7 +269,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
             new PermissionManager(), (PermissionService) getContext(), installManager,
             RepositoryFactory.getStoreRepository(getContext()), storeUtilsProxy,
             storeCredentialsProvider, accountManager, timelineAnalytics, userId, storeId,
-            storeContext, getContext().getResources(), getFragmentNavigator()), savedInstanceState);
+            storeContext, getContext().getResources(), getFragmentNavigator(), score), savedInstanceState);
   }
 
   @Override public void onDestroyView() {
@@ -284,6 +288,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     floatingActionButton = null;
     bottomAlreadyReached = false;
     timelinePostsRepository.clearLoading();
+    score = 0;
   }
 
   @Override public void showCards(List<Post> cards) {
@@ -504,6 +509,12 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void hidePostProgressIndicator() {
     postIndicator = false;
     hideProgressIndicator();
+  }
+
+  @Override public int updateScore(int score) {
+    if(this.score+score >= 0)
+      this.score+=score;
+    return this.score;
   }
 
   private void hideProgressIndicator() {

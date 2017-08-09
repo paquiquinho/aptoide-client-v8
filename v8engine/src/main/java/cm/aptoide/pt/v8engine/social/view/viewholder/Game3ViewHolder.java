@@ -42,6 +42,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     private final TextView headerSubTitle;
 
     private Game3 card;
+    private int scoreValue;
 
 
     public Game3ViewHolder(View itemView,
@@ -51,7 +52,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
         this.spannableFactory = spannableFactory;
 
-        score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
+        this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_score);
         leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_leaderboard);
         answerLeft = (TextView) itemView.findViewById(R.id.game_card_question3_answer_left);
         answerRight = (TextView) itemView.findViewById(R.id.game_card_question3_answer_right);
@@ -72,7 +73,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     public void setPost(Game3 card, int position) {
         this.card = card;
 
-        this.score.setText(String.valueOf(card.getScore()));
+        this.score.setText(String.valueOf(scoreValue));
         this.leaderboard.setText(String.valueOf(card.getgRanking()));
 
         ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);
