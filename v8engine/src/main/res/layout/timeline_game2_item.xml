@@ -142,8 +142,7 @@
           >
 
         <include layout="@layout/timeline_icon_question_body"
-            android:id="@+id/icon_question"
-            android:visibility="visible"/>
+            android:id="@+id/icon_question"            android:visibility="visible"/>
 
         <include layout="@layout/timeline_question_body"
             android:id="@+id/question"
@@ -155,19 +154,41 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="145dp"
             android:src="@mipmap/ic_launcher"
             />
+
+        <ImageView
+            android:id="@+id/left_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="155dp"
+            android:rotation="180"
+            android:src="@drawable/ic_more_arrow_right"
+            />
+
 
         <ImageView
             android:id="@+id/game_card_question2_rightA_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="40dp"
             android:layout_marginTop="145dp"
             android:src="@mipmap/ic_launcher"
+            />
+
+        <ImageView
+            android:id="@+id/right_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="155dp"
+            android:src="@drawable/ic_more_arrow_right"
             />
 
         <ImageView
@@ -177,6 +198,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="145dp"
             android:src="@drawable/appstimeline_game_swipe_icon"
+            android:visibility="gone"
             />
 
       </RelativeLayout>

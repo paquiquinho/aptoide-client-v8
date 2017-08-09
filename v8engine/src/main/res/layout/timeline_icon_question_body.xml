@@ -9,10 +9,10 @@
 
   <ImageView
       android:id="@+id/game_card_questionIcon"
-      android:layout_width="75dp"
-      android:layout_height="75dp"
+      android:layout_width="65dp"
+      android:layout_height="65dp"
       android:layout_centerHorizontal="true"
-      android:layout_marginTop="20dp"
+      android:layout_marginTop="75dp"
       android:src="@mipmap/ic_launcher"
       />
 
@@ -21,14 +21,14 @@
       android:id="@+id/game_card_question"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_below="@id/game_card_questionIcon"
+      android:layout_alignParentTop="true"
       android:layout_centerHorizontal="true"
       android:layout_marginLeft="10dp"
       android:layout_marginRight="10dp"
-      android:layout_marginTop="10dp"
+      android:layout_marginTop="20dp"
       android:text="Testing question type 2"
       android:textAlignment="center"
-      style="@style/Aptoide.TextView.Regular.S.Grey"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
 </RelativeLayout>

@@ -39,7 +39,6 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     private final Button getApp;
     private final TextView answerStatus;
     private final TextView answerMessage;
-    private final ListView playerList;
     private final Button logIn;
 
     private final PublishSubject<CardTouchEvent> cardTouchEventPublishSubject;
@@ -58,7 +57,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         getApp = (Button) itemView.findViewById(R.id.get_app_button);
         answerStatus = (TextView) itemView.findViewById(R.id.answer_status);
         answerMessage = (TextView) itemView.findViewById(R.id.answer_message);
-        playerList = (ListView) itemView.findViewById(R.id.leaderboard_display);
+        //playerList = (ListView) itemView.findViewById(R.id.leaderboard_display);
         logIn = (Button) itemView.findViewById(R.id.login_button);
 
         this.headerIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_icon);
@@ -106,17 +105,17 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
             new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
 
-        if(!card.getLoginButton()){
-            playerList.setVisibility(View.GONE);
-            logIn.setVisibility(View.VISIBLE);
-            logIn.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
-                new CardTouchEvent(card, CardTouchEvent.Type.LOGIN)));
-            score.setVisibility(View.GONE);
-            leaderboard.setVisibility(View.GONE);
-            leaderboardIcon.setVisibility(View.GONE);
-            scoreIcon.setVisibility(View.GONE);
-            this.increment.setVisibility(View.GONE);
-        }
+        //if(!card.getLoginButton()){
+        //    playerList.setVisibility(View.GONE);
+        //    logIn.setVisibility(View.VISIBLE);
+        //    logIn.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        //        new CardTouchEvent(card, CardTouchEvent.Type.LOGIN)));
+        //    score.setVisibility(View.GONE);
+        //    leaderboard.setVisibility(View.GONE);
+        //    leaderboardIcon.setVisibility(View.GONE);
+        //    scoreIcon.setVisibility(View.GONE);
+        //    this.increment.setVisibility(View.GONE);
+        //}
     }
 
     private Spannable getStyledTitle(Context context, String title, String coloredTextPart) {
