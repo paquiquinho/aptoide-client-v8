@@ -87,9 +87,11 @@ import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.v8engine.billing.AccountPayer;
 import cm.aptoide.pt.v8engine.billing.Billing;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.BillingService;
 import cm.aptoide.pt.v8engine.billing.Payer;
 import cm.aptoide.pt.v8engine.billing.PaymentMethodMapper;
@@ -279,6 +281,7 @@ public abstract class V8Engine extends Application {
   private AuthorizationPersistence authorizationPersistence;
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
+  private BillingIdResolver billingiIdResolver;
 
   /**
    * call after this instance onCreate()
@@ -605,7 +608,9 @@ public abstract class V8Engine extends Application {
           AccessorFactory.getAccessorFor(((V8Engine) this.getApplicationContext()).getDatabase(),
               Download.class), getCacheHelper(),
           new FileUtils(action -> Analytics.File.moveFile(action)),
-          new DownloadAnalytics(Analytics.getInstance()), FileDownloader.getImpl(),
+          new DownloadAnalytics(Analytics.getInstance(),
+              new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
+                  AppEventsLogger.newLogger(this))), FileDownloader.getImpl(),
           getConfiguration().getCachePath(), apkPath, obbPath);
     }
     return downloadManager;
@@ -721,13 +726,6 @@ public abstract class V8Engine extends Application {
     return preferences;
   }
 
-  private String getAbHost(SharedPreferences sharedPreferences) {
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_SIXPACK_HOST;
-  }
-
   public cm.aptoide.pt.v8engine.preferences.SecurePreferences getSecurePreferences() {
     if (securePreferences == null) {
       securePreferences =
@@ -782,9 +780,11 @@ public abstract class V8Engine extends Application {
       final BillingService billingService =
           new V3BillingService(getBaseBodyInterceptorV3(), getDefaultClient(),
               WebService.getDefaultConverter(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), new PurchaseMapper(getInAppBillingSerializer()),
-              new ProductFactory(), getPackageRepository(), new PaymentMethodMapper(),
-              getResources());
+              getDefaultSharedPreferences(),
+              new PurchaseMapper(getInAppBillingSerializer(), getBillingIdResolver()),
+              new ProductFactory(getBillingIdResolver()), getPackageRepository(),
+              new PaymentMethodMapper(), getResources(), getBillingIdResolver(),
+              BuildConfig.IN_BILLING_SUPPORTED_API_VERSION);
 
       final PaymentMethodSelector paymentMethodSelector =
           new SharedPreferencesPaymentMethodSelector(BuildConfig.DEFAULT_PAYMENT_ID,
@@ -796,12 +796,19 @@ public abstract class V8Engine extends Application {
     return billing;
   }
 
+  public BillingIdResolver getBillingIdResolver() {
+    if (billingiIdResolver == null) {
+      billingiIdResolver = new BillingIdResolver(getAptoidePackage(), "/", "paid-app", "in-app");
+    }
+    return billingiIdResolver;
+  }
+
   public BillingSyncManager getBillingSyncManager() {
     if (billingSyncManager == null) {
       billingSyncManager = new BillingSyncManager(
-          new BillingSyncFactory(getPayer(), getBillingAnalytics(), getTransactionService(),
-              getAuthorizationService(), geTransactionPersistence(), getAuthorizationPersistence()),
-          getSyncScheduler(), new HashSet<>());
+          new BillingSyncFactory(getPayer(), getTransactionService(), getAuthorizationService(),
+              geTransactionPersistence(), getAuthorizationPersistence()), getSyncScheduler(),
+          new HashSet<>());
     }
     return billingSyncManager;
   }
@@ -853,7 +860,7 @@ public abstract class V8Engine extends Application {
       transactionService =
           new V3TransactionService(getTransactionMapper(), getBaseBodyInterceptorV3(),
               WebService.getDefaultConverter(), getDefaultClient(), getTokenInvalidator(),
-              getDefaultSharedPreferences(), getTransactionFactory());
+              getDefaultSharedPreferences(), getTransactionFactory(), getBillingIdResolver());
     }
     return transactionService;
   }

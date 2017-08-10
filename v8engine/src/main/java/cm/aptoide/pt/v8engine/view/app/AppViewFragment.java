@@ -67,11 +67,13 @@ import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.ads.AdsRepository;
 import cm.aptoide.pt.v8engine.ads.MinimalAdMapper;
 import cm.aptoide.pt.v8engine.analytics.Analytics;
+import cm.aptoide.pt.v8engine.analytics.DownloadCompleteAnalytics;
 import cm.aptoide.pt.v8engine.app.AppBoughtReceiver;
 import cm.aptoide.pt.v8engine.app.AppRepository;
 import cm.aptoide.pt.v8engine.app.AppViewAnalytics;
 import cm.aptoide.pt.v8engine.app.AppViewSimilarAppAnalytics;
 import cm.aptoide.pt.v8engine.billing.BillingAnalytics;
+import cm.aptoide.pt.v8engine.billing.BillingIdResolver;
 import cm.aptoide.pt.v8engine.billing.exception.BillingException;
 import cm.aptoide.pt.v8engine.billing.product.PaidAppPurchase;
 import cm.aptoide.pt.v8engine.billing.view.PaymentActivity;
@@ -110,6 +112,7 @@ import cm.aptoide.pt.v8engine.view.recycler.BaseAdapter;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.v8engine.view.share.ShareAppHelper;
 import cm.aptoide.pt.v8engine.view.store.StoreFragment;
+import com.crashlytics.android.answers.Answers;
 import com.facebook.appevents.AppEventsLogger;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -199,6 +202,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   private PublishRelay installAppRelay;
   @Getter private boolean suggestedShowing;
   private List<String> keywords;
+  private BillingIdResolver billingIdResolver;
 
   public static AppViewFragment newInstanceUname(String uname) {
     Bundle bundle = new Bundle();
@@ -272,6 +276,7 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    billingIdResolver = ((V8Engine) getContext().getApplicationContext()).getBillingIdResolver();
     adMapper = new MinimalAdMapper();
     qManager = ((V8Engine) getContext().getApplicationContext()).getQManager();
     purchaseBundleMapper =
@@ -448,11 +453,11 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
   }
 
   public void buyApp(GetAppMeta.App app) {
-    billingAnalytics.sendPaidAppBuyButtonPressedEvent(app.getPay()
-        .getPrice(), app.getPay()
-        .getCurrency());
-    startActivityForResult(PaymentActivity.getIntent(getActivity(), app.getId(), app.getStore()
-        .getName(), sponsored), PAY_APP_REQUEST_CODE);
+    billingAnalytics.sendPaymentViewShowEvent();
+    startActivityForResult(
+        PaymentActivity.getIntent(getActivity(), billingIdResolver.resolveProductId(app.getId()),
+            billingIdResolver.resolveStoreSellerId(app.getStore()
+                .getName()), null), PAY_APP_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -773,7 +778,9 @@ public class AppViewFragment extends AptoideBaseFragment<BaseAdapter>
     installDisplayable =
         AppViewInstallDisplayable.newInstance(getApp, installManager, minimalAd, shouldInstall,
             installedRepository, downloadFactory, timelineAnalytics, appViewAnalytics,
-            installAppRelay, this);
+            installAppRelay, this,
+            new DownloadCompleteAnalytics(Analytics.getInstance(), Answers.getInstance(),
+                AppEventsLogger.newLogger(getContext().getApplicationContext())));
     displayables.add(installDisplayable);
     displayables.add(new AppViewStoreDisplayable(getApp, appViewAnalytics));
     displayables.add(
