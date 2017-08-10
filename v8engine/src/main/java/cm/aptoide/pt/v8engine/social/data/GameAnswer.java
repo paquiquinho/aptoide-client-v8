@@ -14,7 +14,7 @@ public class GameAnswer implements Post {
     private final String cardID;
     private final App rightAnswer;
     private final List<String> leaderboard;
-    private final int score;
+    private int score;
     private final int gRanking;
     private final int lRanking;
     private final int fRanking;
@@ -120,5 +120,7 @@ public class GameAnswer implements Post {
     public int getPoints() {
         return points;
     }
+
+    public void setScore(int score){this.score = score;}
 
 }

@@ -159,5 +159,16 @@ public class Timeline {
   public void clearLoading() {
     timelinePostsRepository.clearLoading();
   }
+
+  public void updateGameScores(int score){
+    List<Post> posts = timelinePostsRepository.getSavedCards();
+
+    for(int i=0;i< posts.size();i++){
+      if(posts.get(i).getType().isGame()){
+        Game post = (Game) posts.get(i);
+        post.setScore(score);
+      }
+    }
+  }
 }
 

@@ -73,7 +73,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     public void setPost(Game3 card, int position) {
         this.card = card;
 
-        this.score.setText(String.valueOf(scoreValue));
+        this.score.setText(String.valueOf(card.getScore()));
         this.leaderboard.setText(String.valueOf(card.getgRanking()));
 
         ImageLoader.with(itemView.getContext()).load("http://pool.img.aptoide.com/dfl/783ac07187647799c87c4e1d5cde6b8b_icon.png", this.headerIcon);

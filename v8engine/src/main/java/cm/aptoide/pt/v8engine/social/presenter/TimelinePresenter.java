@@ -444,8 +444,7 @@ public class TimelinePresenter implements Presenter {
                   AggregatedRecommendation card = (AggregatedRecommendation) post;
                   timelineNavigation.navigateToAppView(card.getAppId(), card.getPackageName(),
                       AppViewFragment.OpenType.OPEN_ONLY);
-                }
-                else if (type.isGame()) {
+                } else if (type.isGame()) {
                   GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
                   GameAnswer gameAnswer = mapToGameAnswer(event);
                   view.swapPost(gameAnswer, event.getCardPosition());
@@ -484,18 +483,22 @@ public class TimelinePresenter implements Presenter {
         status = "Correct";
         message = "You're good at this!";
         score = view.updateScore(points);
+        timeline.updateGameScores(score);
+        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-               score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
+                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        score = view.updateScore(-points/2);
+        score = view.updateScore(-points / 2);
+        timeline.updateGameScores(score);
+        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
+                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
       }
     } else {
       if (card.getRightAnswer()
@@ -503,18 +506,22 @@ public class TimelinePresenter implements Presenter {
         status = "Correct";
         message = "You're good at this!";
         score = view.updateScore(points);
+        timeline.updateGameScores(score);
+        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
+                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        score = view.updateScore(-points/2);
+        score = view.updateScore(-points / 2);
+        timeline.updateGameScores(score);
+        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
-                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status,
-                message, card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
+                score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
       }
     }
 

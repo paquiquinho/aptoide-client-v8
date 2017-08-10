@@ -517,6 +517,10 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     return this.score;
   }
 
+  public void updateGameCardScores(){
+    adapter.notifyDataSetChanged();
+  }
+
   private void hideProgressIndicator() {
     if (!postIndicator && !progressIndicator) {
       list.setVisibility(View.VISIBLE);
