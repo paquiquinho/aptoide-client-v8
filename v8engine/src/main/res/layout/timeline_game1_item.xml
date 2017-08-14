@@ -145,7 +145,6 @@
 
         <TextView
             android:id="@+id/game_card_question1_question"
-            style="@style/Aptoide.TextView.Regular.S.Grey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/game_card_question1_icon"
@@ -155,11 +154,12 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:text="Insert question here!"
+            style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
             />
 
         <TextView
             android:id="@+id/game_card_question1_answerLeft"
-            style="@style/Aptoide.TextView.Regular.XS.Grey"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -173,7 +173,7 @@
 
         <TextView
             android:id="@+id/game_card_question1_answerRight"
-            style="@style/Aptoide.TextView.Regular.XS.Grey"
+            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

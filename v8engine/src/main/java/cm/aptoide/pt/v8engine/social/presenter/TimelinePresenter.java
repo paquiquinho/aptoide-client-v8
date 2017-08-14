@@ -477,6 +477,13 @@ public class TimelinePresenter implements Presenter {
 
     card = (Game) event.getCard();
 
+    timeline.updateLeaderboard();
+
+
+
+
+
+
     if (card instanceof Game2) {
       if (card.getRightAnswer()
           .getIcon() == event.getAnswerText()) {

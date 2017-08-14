@@ -170,5 +170,9 @@ public class Timeline {
       }
     }
   }
+
+  public void updateLeaderboard() {
+
+  }
 }
 
