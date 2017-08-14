@@ -1,0 +1,56 @@
+package cm.aptoide.pt.dataprovider.ws.v7;
+
+import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
+import rx.Observable;
+
+/**
+ * Created by franciscocalado on 8/14/17.
+ */
+
+public class UpdateLeaderboardRequest extends V7<BaseV7Response, UpdateLeaderboardRequest.Body> {
+
+  private String url = "http://127.0.0.1:5000/api/7/user/timeline/game/setScore/";
+
+  UpdateLeaderboardRequest(String url, UpdateLeaderboardRequest.Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
+        tokenInvalidator);
+    //    this.url = url;
+  }
+
+  public static UpdateLeaderboardRequest of(String url, boolean answer, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, String cardId, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+
+    return new UpdateLeaderboardRequest(url,
+        new UpdateLeaderboardRequest.Body(answer, cardId, sharedPreferences), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+  }
+
+  @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
+      boolean bypassCache) {
+    return interfaces.updateLeaderboard(url, body, bypassCache);
+  }
+
+  public static class Body extends BaseBodyWithAlphaBetaKey {
+
+    private boolean answer;
+    private String cardUid;
+
+    public Body(boolean answer, String cardId, SharedPreferences sharedPreferences) {
+      super(sharedPreferences);
+      this.answer = answer;
+      this.cardUid = cardId;
+    }
+
+    public String getCardUid(){return cardUid;}
+    public void setAnswer(boolean answer){this.answer=answer;}
+    public boolean getAnswer(){return answer;}
+  }
+}
