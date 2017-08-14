@@ -1,6 +1,12 @@
 package cm.aptoide.pt.v8engine.social.data;
 
+import android.content.SharedPreferences;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.UpdateLeaderboardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.post.UpdateLeaderboardResponse;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.v8engine.BuildConfig;
@@ -17,6 +23,7 @@ import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -31,15 +38,27 @@ public class Timeline {
   private final DownloadFactory downloadFactory;
   private final TimelineAnalytics timelineAnalytics;
   private final TimelinePostsRepository timelinePostsRepository;
+  private BodyInterceptor<BaseBody> bodyInterceptor;
+  private OkHttpClient httpClient;
+  private Converter.Factory converterFactory;
+  private TokenInvalidator tokenInvalidator;
+  private SharedPreferences sharedPreferences;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
-      TimelinePostsRepository timelinePostsRepository) {
+      TimelinePostsRepository timelinePostsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
+      OkHttpClient httpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.timelineAnalytics = timelineAnalytics;
     this.timelinePostsRepository = timelinePostsRepository;
+    this.bodyInterceptor = bodyInterceptor;
+    this.httpClient = httpClient;
+    this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
   }
 
   public Single<List<Post>> getCards() {
@@ -171,7 +190,11 @@ public class Timeline {
     }
   }
 
-  public void updateLeaderboard() {
+  public Observable<UpdateLeaderboardResponse> updateLeaderboard(boolean answer) {
+    return UpdateLeaderboardRequest.of("", answer,bodyInterceptor, httpClient, converterFactory, "",
+        tokenInvalidator, sharedPreferences)
+        .observe(true);
+
 
   }
 }

@@ -40,6 +40,9 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     private final TextView answerStatus;
     private final TextView answerMessage;
     private final Button logIn;
+    private final TextView lb1;
+    private final TextView lb2;
+    private final TextView lb3;
 
     private int scoreValue;
 
@@ -68,6 +71,9 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.leaderboardIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard_icon);
         this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score_icon);
 
+        this.lb1 = (TextView) itemView.findViewById(R.id.lb_1);
+        this.lb2 = (TextView) itemView.findViewById(R.id.lb_2);
+        this.lb3 = (TextView) itemView.findViewById(R.id.lb_3);
     }
 
     @Override public void setPost(GameAnswer card, int position) {
@@ -119,6 +125,11 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         //    scoreIcon.setVisibility(View.GONE);
         //    this.increment.setVisibility(View.GONE);
         //}
+        if(card.getUser1() != null){
+            lb1.setText("#"+card.getUser1().getPosition()+" "+card.getUser1().getName()+" - "+card.getUser1().getScore());
+            lb2.setText("#"+card.getUser2().getPosition()+" "+card.getUser2().getName()+" - "+card.getUser2().getScore());
+            lb3.setText("#"+card.getUser3().getPosition()+" "+card.getUser3().getName()+" - "+card.getUser3().getScore());
+        }
     }
 
     private Spannable getStyledTitle(Context context, String title, String coloredTextPart) {

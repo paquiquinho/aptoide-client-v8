@@ -447,6 +447,8 @@ public class TimelinePresenter implements Presenter {
                 } else if (type.isGame()) {
                   GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
                   GameAnswer gameAnswer = mapToGameAnswer(event);
+
+                  updateAnswer(gameAnswer, event.getCardPosition());
                   view.swapPost(gameAnswer, event.getCardPosition());
                   Logger.d(this.getClass()
                       .getCanonicalName(), "Clicked on: " + event.getAnswerText());
@@ -471,13 +473,13 @@ public class TimelinePresenter implements Presenter {
 
     String message;
     String status;
-    GameAnswer answer;
+    final GameAnswer answer;
     Game card;
     int points = 10;
 
     card = (Game) event.getCard();
 
-    timeline.updateLeaderboard();
+
 
 
 
@@ -489,50 +491,66 @@ public class TimelinePresenter implements Presenter {
           .getIcon() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
-        score = view.updateScore(points);
         timeline.updateGameScores(score);
         view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        score = view.updateScore(-points / 2);
         timeline.updateGameScores(score);
         view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null);
       }
     } else {
       if (card.getRightAnswer()
           .getName() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
-        score = view.updateScore(points);
         timeline.updateGameScores(score);
         view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        score = view.updateScore(-points / 2);
         timeline.updateGameScores(score);
         view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null);
       }
     }
 
     return answer;
+  }
+
+  private void updateAnswer(GameAnswer gameAnswer, int position){
+    timeline.updateLeaderboard(true).subscribe(updateLeaderboardResponse -> {
+          if(updateLeaderboardResponse.isOk()){
+            score = updateLeaderboardResponse.getData().getScore();
+            gameAnswer.setScore(score);
+            gameAnswer.setUser1(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(0).getName()
+                ,updateLeaderboardResponse.getData().getLeaderboard().get(0).getPosition(),
+                updateLeaderboardResponse.getData().getLeaderboard().get(0).getScore()));
+            gameAnswer.setUser2(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(1).getName()
+                ,updateLeaderboardResponse.getData().getLeaderboard().get(1).getPosition(),
+                updateLeaderboardResponse.getData().getLeaderboard().get(1).getScore()));
+            gameAnswer.setUser3(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(2).getName()
+                ,updateLeaderboardResponse.getData().getLeaderboard().get(2).getPosition(),
+                updateLeaderboardResponse.getData().getLeaderboard().get(2).getScore()));
+            view.updatePost(position);
+          }
+        },
+        throwable -> throwable.printStackTrace());
   }
 
   private void clickOnLikeSocialPost() {

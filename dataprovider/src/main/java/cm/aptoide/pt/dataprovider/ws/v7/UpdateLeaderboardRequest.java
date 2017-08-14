@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.post.UpdateLeaderboardResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -12,7 +13,7 @@ import rx.Observable;
  * Created by franciscocalado on 8/14/17.
  */
 
-public class UpdateLeaderboardRequest extends V7<BaseV7Response, UpdateLeaderboardRequest.Body> {
+public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, UpdateLeaderboardRequest.Body> {
 
   private String url = "http://127.0.0.1:5000/api/7/user/timeline/game/setScore/";
 
@@ -33,7 +34,7 @@ public class UpdateLeaderboardRequest extends V7<BaseV7Response, UpdateLeaderboa
         httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
-  @Override protected Observable<BaseV7Response> loadDataFromNetwork(Interfaces interfaces,
+  @Override protected Observable<UpdateLeaderboardResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.updateLeaderboard(url, body, bypassCache);
   }

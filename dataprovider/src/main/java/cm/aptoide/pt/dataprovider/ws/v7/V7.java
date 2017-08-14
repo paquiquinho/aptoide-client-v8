@@ -43,6 +43,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.post.UpdateLeaderboardResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
@@ -260,7 +261,7 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
         @retrofit2.http.Body GetUserTimelineRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST Observable<BaseV7Response> updateLeaderboard(@Url String url,
+    @POST Observable<UpdateLeaderboardResponse> updateLeaderboard(@Url String url,
         @retrofit2.http.Body UpdateLeaderboardRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 

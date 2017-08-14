@@ -26,6 +26,8 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -76,6 +78,8 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.Collections;
 import java.util.List;
+import okhttp3.OkHttpClient;
+import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -235,11 +239,15 @@ public class TimelineFragment extends FragmentView implements TimelineView {
                 postTouchEventPublishSubject)), new ProgressCard());
     list.setAdapter(adapter);
 
+    final BodyInterceptor<BaseBody> baseBodyInterceptorV7 =
+        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7();
+    final OkHttpClient defaultClient =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
+    final Converter.Factory defaultConverter = WebService.getDefaultConverter();
+
     TimelineAnalytics timelineAnalytics = new TimelineAnalytics(Analytics.getInstance(),
         AppEventsLogger.newLogger(getContext().getApplicationContext()),
-        ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
-        ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-        WebService.getDefaultConverter(), tokenInvalidator, V8Engine.getConfiguration()
+        baseBodyInterceptorV7, defaultClient, defaultConverter, tokenInvalidator, V8Engine.getConfiguration()
         .getAppId(), sharedPreferences);
 
     final StoreAccessor storeAccessor = AccessorFactory.getAccessorFor(
@@ -250,19 +258,19 @@ public class TimelineFragment extends FragmentView implements TimelineView {
 
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
-            timelinePostsRepository);
+            timelinePostsRepository, baseBodyInterceptorV7, defaultClient, defaultConverter,
+            tokenInvalidator, sharedPreferences);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
 
     StoreUtilsProxy storeUtilsProxy =
         new StoreUtilsProxy(((V8Engine) getContext().getApplicationContext()).getAccountManager(),
-            ((V8Engine) getContext().getApplicationContext()).getBaseBodyInterceptorV7(),
+            baseBodyInterceptorV7,
             storeCredentialsProvider, storeAccessor,
-            ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
-            WebService.getDefaultConverter(),
-            ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator(),
-            ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences());
+            defaultClient, defaultConverter,
+            tokenInvalidator,
+            sharedPreferences);
 
     attachPresenter(
         new TimelinePresenter(this, timeline, CrashReport.getInstance(), timelineNavigation,
