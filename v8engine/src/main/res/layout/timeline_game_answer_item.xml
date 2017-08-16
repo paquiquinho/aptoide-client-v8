@@ -90,9 +90,20 @@
           android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_leaderboard_icon"
           android:layout_marginRight="35dp"
           android:layout_marginTop="18dp"
+          android:visibility="invisible"
           android:text="2000"
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
+
+      <ProgressBar
+          android:id="@+id/score_progress"
+          android:layout_width="20dp"
+          android:layout_height="20dp"
+          android:layout_toLeftOf="@id/displayable_social_timeline_answer_card_leaderboard_icon"
+          android:layout_marginRight="35dp"
+          android:layout_marginTop="15dp"
+          android:visibility="visible"
+          android:indeterminate="true" />
 
       <TextView
           android:id="@+id/score_increment"
@@ -215,6 +226,7 @@
             android:layout_marginLeft="75dp"
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@id/get_app_button"
+            android:visibility="invisible"
             style="@style/Aptoide.TextView.Regular.XS.Grey"
             android:text="#99 - Someone Better"
             />
@@ -227,6 +239,7 @@
             android:layout_marginLeft="75dp"
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@id/get_app_button"
+            android:visibility="invisible"
             style="@style/Aptoide.TextView.Regular.XS.Grey"
             android:text="#100 - You"
             />
@@ -239,9 +252,21 @@
             android:layout_marginLeft="75dp"
             android:layout_marginTop="0dp"
             android:layout_toRightOf="@id/get_app_button"
+            android:visibility="invisible"
             style="@style/Aptoide.TextView.Regular.XS.Grey"
             android:text="#101 - Someone Worst"
             />
+        <ProgressBar
+            android:id="@+id/leaderboard_progress"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/answer_message"
+            android:layout_marginLeft="110dp"
+            android:layout_marginTop="15dp"
+            android:layout_toRightOf="@id/get_app_button"
+            android:visibility="visible"
+            android:indeterminate="true" />
+
 
         <!--<Button-->
             <!--android:layout_width="20dp"-->
@@ -254,6 +279,7 @@
             <!--/>-->
 
         <Button
+            android:id="@+id/expand_leaderboard"
             android:layout_width="110dp"
             android:layout_height="30dp"
             android:layout_below="@id/lb_3"
@@ -262,6 +288,7 @@
             android:layout_marginTop="5dp"
             android:textSize="8dp"
             android:text="full leaderboard"
+            android:visibility="invisible"
             style="@style/Aptoide.Button.Ghost.ThinBlackAlpha"            />
         <!--<ListView-->
             <!--android:id="@+id/leaderboard_display"-->

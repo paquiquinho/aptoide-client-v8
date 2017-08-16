@@ -17,7 +17,7 @@ public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, Upda
 
   private String url = "http://127.0.0.1:5000/api/7/user/timeline/game/setScore/";
 
-  UpdateLeaderboardRequest(String url, UpdateLeaderboardRequest.Body body, BodyInterceptor<BaseBody> bodyInterceptor,
+  UpdateLeaderboardRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
@@ -30,7 +30,7 @@ public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, Upda
       SharedPreferences sharedPreferences) {
 
     return new UpdateLeaderboardRequest(url,
-        new UpdateLeaderboardRequest.Body(answer, cardId, sharedPreferences), bodyInterceptor,
+        new Body(answer, cardId, sharedPreferences), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 

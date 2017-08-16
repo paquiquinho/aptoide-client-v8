@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import cm.aptoide.pt.preferences.Application;
@@ -43,6 +44,9 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     private final TextView lb1;
     private final TextView lb2;
     private final TextView lb3;
+    private final ProgressBar scoreProgress;
+    private final ProgressBar leaderboardProgress;
+    private final Button expandLeaderboard;
 
     private int scoreValue;
 
@@ -54,6 +58,7 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
         this.cardTouchEventPublishSubject = cardTouchEventPublishSubject;
         this.spannableFactory = spannableFactory;
+
 
         this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score);
         increment = (TextView) itemView.findViewById(R.id.score_increment);
@@ -74,6 +79,12 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.lb1 = (TextView) itemView.findViewById(R.id.lb_1);
         this.lb2 = (TextView) itemView.findViewById(R.id.lb_2);
         this.lb3 = (TextView) itemView.findViewById(R.id.lb_3);
+
+        this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
+        this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.leaderboard_progress);
+        this.expandLeaderboard = (Button) itemView.findViewById(R.id.expand_leaderboard);
+
+
     }
 
     @Override public void setPost(GameAnswer card, int position) {
@@ -85,7 +96,6 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         } else
             increment = "(" + String.valueOf(card.getPoints()) + ")";
 
-        this.score.setText(String.valueOf(card.getScore()));
         this.increment.setText(increment);
         if(card.getPoints() < 0)
             this.increment.setTextColor(Color.RED);
@@ -126,9 +136,27 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         //    this.increment.setVisibility(View.GONE);
         //}
         if(card.getUser1() != null){
+            score.setVisibility(View.VISIBLE);
+            scoreProgress.setVisibility(View.INVISIBLE);
+            this.score.setText(String.valueOf(card.getScore()));
+            lb1.setVisibility(View.VISIBLE);
+            lb2.setVisibility(View.VISIBLE);
+            lb3.setVisibility(View.VISIBLE);
+            expandLeaderboard.setVisibility(View.VISIBLE);
+            leaderboardProgress.setVisibility(View.INVISIBLE);
+
             lb1.setText("#"+card.getUser1().getPosition()+" "+card.getUser1().getName()+" - "+card.getUser1().getScore());
             lb2.setText("#"+card.getUser2().getPosition()+" "+card.getUser2().getName()+" - "+card.getUser2().getScore());
             lb3.setText("#"+card.getUser3().getPosition()+" "+card.getUser3().getName()+" - "+card.getUser3().getScore());
+        }
+        else{
+            score.setVisibility(View.INVISIBLE);
+            scoreProgress.setVisibility(View.VISIBLE);
+            lb1.setVisibility(View.INVISIBLE);
+            lb2.setVisibility(View.INVISIBLE);
+            lb3.setVisibility(View.INVISIBLE);
+            expandLeaderboard.setVisibility(View.INVISIBLE);
+            leaderboardProgress.setVisibility(View.VISIBLE);
         }
     }
 

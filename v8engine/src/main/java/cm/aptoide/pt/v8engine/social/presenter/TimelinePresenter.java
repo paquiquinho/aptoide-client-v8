@@ -447,9 +447,9 @@ public class TimelinePresenter implements Presenter {
                 } else if (type.isGame()) {
                   GameCardTouchEvent event = (GameCardTouchEvent) cardTouchEvent;
                   GameAnswer gameAnswer = mapToGameAnswer(event);
-
-                  updateAnswer(gameAnswer, event.getCardPosition());
+                  timeline.swapGameAnswer(gameAnswer, (Game) event.getCard());
                   view.swapPost(gameAnswer, event.getCardPosition());
+                  updateAnswer(gameAnswer, event.getCardPosition());
                   Logger.d(this.getClass()
                       .getCanonicalName(), "Clicked on: " + event.getAnswerText());
                 } else if (type.equals(CardType.GAMEANSWER)) {
@@ -473,15 +473,9 @@ public class TimelinePresenter implements Presenter {
 
     String message;
     String status;
-    final GameAnswer answer;
-    Game card;
+    Game card = (Game) event.getCard();
     int points = 10;
-
-    card = (Game) event.getCard();
-
-
-
-
+    final GameAnswer answer;
 
 
 
@@ -491,8 +485,6 @@ public class TimelinePresenter implements Presenter {
           .getIcon() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
-        timeline.updateGameScores(score);
-        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
@@ -500,8 +492,6 @@ public class TimelinePresenter implements Presenter {
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        timeline.updateGameScores(score);
-        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
@@ -512,8 +502,6 @@ public class TimelinePresenter implements Presenter {
           .getName() == event.getAnswerText()) {
         status = "Correct";
         message = "You're good at this!";
-        timeline.updateGameScores(score);
-        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
@@ -521,8 +509,6 @@ public class TimelinePresenter implements Presenter {
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
-        timeline.updateGameScores(score);
-        view.updateGameCardScores();
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
@@ -534,7 +520,13 @@ public class TimelinePresenter implements Presenter {
   }
 
   private void updateAnswer(GameAnswer gameAnswer, int position){
-    timeline.updateLeaderboard(true).subscribe(updateLeaderboardResponse -> {
+    boolean answer;
+    if(gameAnswer.getStatus() == "Correct")
+      answer=true;
+    else
+      answer=false;
+
+    timeline.updateLeaderboard(answer).observeOn(AndroidSchedulers.mainThread()).subscribe(updateLeaderboardResponse -> {
           if(updateLeaderboardResponse.isOk()){
             score = updateLeaderboardResponse.getData().getScore();
             gameAnswer.setScore(score);
@@ -547,6 +539,8 @@ public class TimelinePresenter implements Presenter {
             gameAnswer.setUser3(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(2).getName()
                 ,updateLeaderboardResponse.getData().getLeaderboard().get(2).getPosition(),
                 updateLeaderboardResponse.getData().getLeaderboard().get(2).getScore()));
+            timeline.updateGameScores(score);
+            view.updateGameCardScores();
             view.updatePost(position);
           }
         },
