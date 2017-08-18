@@ -21,7 +21,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxViewHolder> {
       PublishSubject<AptoideNotification> notificationSubject) {
     this.notifications = notifications;
     this.notificationSubject = notificationSubject;
-  }
+}
 
   @Override public InboxViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new InboxViewHolder(LayoutInflater.from(parent.getContext())
