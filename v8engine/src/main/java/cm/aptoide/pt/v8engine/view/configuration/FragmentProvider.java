@@ -164,4 +164,6 @@ public interface FragmentProvider {
   Fragment newTimeLineFollowersFragment(String storeTheme, String title);
 
   Fragment newRecommendedStoresFragment();
+
+  Fragment newLeaderboardFragment();
 }

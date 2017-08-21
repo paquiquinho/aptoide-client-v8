@@ -22,6 +22,16 @@ public class Leaderboard {
   private SharedPreferences sharedPreferences;
   private LeaderboardEntryMapper mapper;
 
+  public Leaderboard(BodyInterceptor<BaseBody> bodyBodyInterceptor, OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences){
+    this.bodyInterceptor = bodyBodyInterceptor;
+    this.httpClient = okHttpClient;
+    this.converterFactory = converterFactory;
+    this.tokenInvalidator = tokenInvalidator;
+    this.sharedPreferences = sharedPreferences;
+    mapper = new LeaderboardEntryMapper();
+  }
+
   public Observable<List<LeaderboardEntry>> getLeaderboardEntries() {
     return GetLeaderboardEntriesRequest.of("", "", 0, 10, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)

@@ -40,5 +40,7 @@ public interface TimelineNavigation {
 
   void navigateToComments(String cardId);
 
+  void navigateToLeaderboard();
+
   rx.Observable<String> postNavigation();
 }

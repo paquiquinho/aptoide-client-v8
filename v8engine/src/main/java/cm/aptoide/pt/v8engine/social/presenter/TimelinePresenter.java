@@ -27,6 +27,7 @@ import cm.aptoide.pt.v8engine.social.data.Game;
 import cm.aptoide.pt.v8engine.social.data.Game2;
 import cm.aptoide.pt.v8engine.social.data.GameAnswer;
 import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
+import cm.aptoide.pt.v8engine.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.LikesPreviewCardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.Media;
 import cm.aptoide.pt.v8engine.social.data.PopularApp;
@@ -453,10 +454,15 @@ public class TimelinePresenter implements Presenter {
                   Logger.d(this.getClass()
                       .getCanonicalName(), "Clicked on: " + event.getAnswerText());
                 } else if (type.equals(CardType.GAMEANSWER)) {
-                  GameAnswer card = (GameAnswer) post;
-                  timelineNavigation.navigateToAppView(card.getRightAnswer()
-                      .getId(), card.getRightAnswer()
-                      .getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                    if(cardTouchEvent instanceof LeaderboardTouchEvent){
+                      timelineNavigation.navigateToLeaderboard();
+                    }
+                    else {
+                      GameAnswer card = (GameAnswer) post;
+                      timelineNavigation.navigateToAppView(card.getRightAnswer()
+                          .getId(), card.getRightAnswer()
+                          .getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                    }
                 }
               }
             })

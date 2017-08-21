@@ -117,6 +117,11 @@ public class TimelineNavigator implements TimelineNavigation {
         .newCommentGridRecyclerFragment(CommentType.TIMELINE, cardId));
   }
 
+  @Override public void navigateToLeaderboard(){
+    fragmentNavigator.navigateTo(V8Engine.getFragmentProvider()
+        .newLeaderboardFragment());
+  }
+
   @Override public Observable<String> postNavigation() {
     return tabNavigator.navigation()
         .filter(tabNavigation -> tabNavigation.getTab() == TabNavigation.TIMELINE)

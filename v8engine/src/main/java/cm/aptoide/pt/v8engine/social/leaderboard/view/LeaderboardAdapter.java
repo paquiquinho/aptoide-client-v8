@@ -21,7 +21,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardViewHold
 
   @Override public LeaderboardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     return new LeaderboardViewHolder(LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.fragment_inbox_list_item, parent, false));
+        .inflate(R.layout.fragment_leaderboard_list_item, parent, false));
   }
 
   @Override public void onBindViewHolder(LeaderboardViewHolder holder, int position) {
@@ -30,5 +30,10 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardViewHold
 
   @Override public int getItemCount() {
     return entries.size();
+  }
+
+  public void updateLeaderboardEntries(List<LeaderboardEntry> entries){
+    this.entries=entries;
+    notifyDataSetChanged();
   }
 }

@@ -7,6 +7,7 @@ import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.v8engine.addressbook.data.Contact;
 import cm.aptoide.pt.v8engine.presenter.InviteFriendsContract;
+import cm.aptoide.pt.v8engine.social.leaderboard.view.LeaderboardFragment;
 import cm.aptoide.pt.v8engine.social.view.TimelineFragment;
 import cm.aptoide.pt.v8engine.spotandshare.view.SpotSharePreviewFragment;
 import cm.aptoide.pt.v8engine.timeline.view.SocialFragment;
@@ -335,5 +336,9 @@ public class FragmentProviderImpl implements FragmentProvider {
 
   @Override public Fragment newRecommendedStoresFragment() {
     return new RecommendedStoresFragment();
+  }
+
+  @Override public Fragment newLeaderboardFragment(){
+    return new LeaderboardFragment();
   }
 }

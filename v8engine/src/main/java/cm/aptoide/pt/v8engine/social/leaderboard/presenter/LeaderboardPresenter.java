@@ -37,7 +37,7 @@ public class LeaderboardPresenter implements Presenter {
   @Override public void present() {
     view.getLifecycle()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__->leaderboard.getLeaderboardEntries())
+        .flatMap(__-> leaderboard.getLeaderboardEntries())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(leaderboardEntries->view.showLeaderboardEntries(leaderboardEntries))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

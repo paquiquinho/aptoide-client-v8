@@ -18,6 +18,7 @@ import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
 import cm.aptoide.pt.v8engine.social.data.GameAnswer;
+import cm.aptoide.pt.v8engine.social.data.LeaderboardTouchEvent;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
@@ -123,6 +124,10 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
         getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
             new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
+
+        expandLeaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+            new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY)));
+
 
         //if(!card.getLoginButton()){
         //    playerList.setVisibility(View.GONE);

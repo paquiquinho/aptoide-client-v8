@@ -17,12 +17,12 @@ public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
 
   public LeaderboardViewHolder(View itemView) {
     super(itemView);
-    this.name = (TextView) itemView.findViewById(R.id.user_name);
-    this.score = (TextView) itemView.findViewById(R.id.user_score);
+    this.name = (TextView) itemView.findViewById(R.id.leaderboard_user_name);
+    this.score = (TextView) itemView.findViewById(R.id.leaderboard_user_score);
   }
 
   public void setItem(LeaderboardEntry entry){
     name.setText("#"+entry.getPosition()+" "+entry.getName());
-    score.setText(entry.getScore());
+    score.setText(String.valueOf(entry.getScore()));
   }
 }

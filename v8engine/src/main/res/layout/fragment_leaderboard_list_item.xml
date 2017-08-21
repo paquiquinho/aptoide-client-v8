@@ -21,7 +21,7 @@
         android:layout_marginTop="15dp"
         >
       <TextView
-          android:id="@+id/user_name"
+          android:id="@+id/leaderboard_user_name"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textAllCaps="true"
@@ -30,10 +30,10 @@
           android:text="me - #100"
           />
       <TextView
-          android:id="@+id/user_score"
+          android:id="@+id/leaderboard_user_score"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_below="@id/user_name"
+          android:layout_below="@id/leaderboard_user_name"
           android:paddingTop="5dp"
           android:layout_alignParentLeft="true"
           style="@style/Aptoide.TextView.Regular.S"
