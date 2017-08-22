@@ -47,7 +47,7 @@ public abstract class BaseToolbarFragment extends UIComponentFragment {
   }
 
   protected boolean displayHomeUpAsEnabled() {
-    return false;
+    return true;
   }
 
   protected void setupToolbarDetails(Toolbar toolbar) {

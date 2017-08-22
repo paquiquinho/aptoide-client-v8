@@ -16,7 +16,7 @@ import rx.Observable;
 
 public class GetLeaderboardEntriesRequest extends V7<GetLeaderboardEntriesResponse, GetLeaderboardEntriesRequest.Body> {
 
-  private String url = "http://127.0.0.1:5000/api/7/user/timeline/game/getLeaderboard/";
+  private String url = "http://192.168.1.100:5000/api/7/user/timeline/game/getLeaderboard/";
 
   GetLeaderboardEntriesRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
