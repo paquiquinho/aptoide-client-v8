@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -42,9 +43,16 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     private final TextView answerStatus;
     private final TextView answerMessage;
     private final Button logIn;
-    private final TextView lb1;
-    private final TextView lb2;
-    private final TextView lb3;
+    private final View leaderboards;
+    private final TextView rankingFirst;
+    private final TextView nameFirst;
+    private final TextView scoreFirst;
+    private final TextView rankingSec;
+    private final TextView nameSec;
+    private final TextView scoreSec;
+    private final TextView rankingThird;
+    private final TextView nameThird;
+    private final TextView scoreThird;
     private final ProgressBar scoreProgress;
     private final ProgressBar leaderboardProgress;
     private final Button expandLeaderboard;
@@ -77,9 +85,19 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.leaderboardIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard_icon);
         this.scoreIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score_icon);
 
-        this.lb1 = (TextView) itemView.findViewById(R.id.lb_1);
-        this.lb2 = (TextView) itemView.findViewById(R.id.lb_2);
-        this.lb3 = (TextView) itemView.findViewById(R.id.lb_3);
+        this.leaderboards = itemView.findViewById(R.id.card_leaderboard);
+
+        this.rankingFirst = (TextView) itemView.findViewById(R.id.p1_ranking);
+        this.nameFirst = (TextView) itemView.findViewById(R.id.p1_name);
+        this.scoreFirst = (TextView) itemView.findViewById(R.id.p1_score);
+
+        this.rankingSec = (TextView) itemView.findViewById(R.id.p2_ranking);
+        this.nameSec = (TextView) itemView.findViewById(R.id.p2_name);
+        this.scoreSec = (TextView) itemView.findViewById(R.id.p2_score);
+
+        this.rankingThird = (TextView) itemView.findViewById(R.id.p3_ranking);
+        this.nameThird = (TextView) itemView.findViewById(R.id.p3_name);
+        this.scoreThird = (TextView) itemView.findViewById(R.id.p3_score);
 
         this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
         this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.leaderboard_progress);
@@ -144,22 +162,26 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
             score.setVisibility(View.VISIBLE);
             scoreProgress.setVisibility(View.INVISIBLE);
             this.score.setText(String.valueOf(card.getScore()));
-            lb1.setVisibility(View.VISIBLE);
-            lb2.setVisibility(View.VISIBLE);
-            lb3.setVisibility(View.VISIBLE);
+            leaderboards.setVisibility(View.VISIBLE);
             expandLeaderboard.setVisibility(View.VISIBLE);
             leaderboardProgress.setVisibility(View.INVISIBLE);
 
-            lb1.setText("#"+card.getUser1().getPosition()+" "+card.getUser1().getName()+" - "+card.getUser1().getScore());
-            lb2.setText("#"+card.getUser2().getPosition()+" "+card.getUser2().getName()+" - "+card.getUser2().getScore());
-            lb3.setText("#"+card.getUser3().getPosition()+" "+card.getUser3().getName()+" - "+card.getUser3().getScore());
+            rankingFirst.setText(String.valueOf(card.getUser1().getPosition()));
+            nameFirst.setText(card.getUser1().getName());
+            scoreFirst.setText(String.valueOf(card.getUser1().getScore()));
+
+            rankingSec.setText(String.valueOf(card.getUser2().getPosition()));
+            nameSec.setText(card.getUser2().getName());
+            scoreSec.setText(String.valueOf(card.getUser2().getScore()));
+
+            rankingThird.setText(String.valueOf(card.getUser3().getPosition()));
+            nameThird.setText(card.getUser3().getName());
+            scoreThird.setText(String.valueOf(card.getUser3().getScore()));
         }
         else{
             score.setVisibility(View.INVISIBLE);
             scoreProgress.setVisibility(View.VISIBLE);
-            lb1.setVisibility(View.INVISIBLE);
-            lb2.setVisibility(View.INVISIBLE);
-            lb3.setVisibility(View.INVISIBLE);
+            leaderboards.setVisibility(View.INVISIBLE);
             expandLeaderboard.setVisibility(View.INVISIBLE);
             leaderboardProgress.setVisibility(View.VISIBLE);
         }

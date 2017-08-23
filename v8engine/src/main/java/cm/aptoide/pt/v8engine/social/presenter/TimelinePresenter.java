@@ -535,7 +535,9 @@ public class TimelinePresenter implements Presenter {
     timeline.updateLeaderboard(answer).observeOn(AndroidSchedulers.mainThread()).subscribe(updateLeaderboardResponse -> {
           if(updateLeaderboardResponse.isOk()){
             score = updateLeaderboardResponse.getData().getScore();
+            int rankingPosition = updateLeaderboardResponse.getData().getPosition();
             gameAnswer.setScore(score);
+            gameAnswer.setgRanking(rankingPosition);
             gameAnswer.setUser1(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(0).getName()
                 ,updateLeaderboardResponse.getData().getLeaderboard().get(0).getPosition(),
                 updateLeaderboardResponse.getData().getLeaderboard().get(0).getScore()));

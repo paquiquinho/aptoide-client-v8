@@ -18,6 +18,7 @@ public class UpdateLeaderboardResponse extends BaseV7Response {
 
     private String uid;
     private int score;
+    private int position;
     private List<User> leaderboard;
 
     public Data(){
@@ -32,6 +33,9 @@ public class UpdateLeaderboardResponse extends BaseV7Response {
 
     public List<User> getLeaderboard(){return leaderboard;}
     public void setLeaderboard(List<User> leaderboard){this.leaderboard=leaderboard;}
+
+    public int getPosition() {return position;}
+    public void setPosition(int position) {this.position = position;}
   }
 
   public static class User{

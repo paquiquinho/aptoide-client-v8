@@ -83,7 +83,13 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
             wrapper = itemView.findViewById(R.id.question);
             wrapper.setVisibility(View.VISIBLE);
             question = (TextView) wrapper.findViewById(R.id.game_card_question);
-            this.question.setText(card.getQuestion()+" "+card.getApp().getName()+"?");
+            String test = card.getQuestion();
+            if(test.charAt(test.length()-1)=='?'){
+                this.question.setText(test);
+            }
+            else{
+                this.question.setText(test+" "+card.getApp().getName()+"?");
+            }
         }
         else{
             itemView.findViewById(R.id.question).setVisibility(View.GONE);

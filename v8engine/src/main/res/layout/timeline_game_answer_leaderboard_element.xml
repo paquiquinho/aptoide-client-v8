@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+  <ImageView
+      android:id="@+id/p1_image"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_below="@id/answer_status"
+      android:layout_toRightOf="@id/get_app_button"
+      android:layout_marginLeft="5dp"
+      android:layout_marginTop="25dp"
+      android:src="@drawable/fake_app"
+      />
+
+  <TextView
+      android:id="@+id/p1_ranking"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/answer_status"
+      android:layout_toRightOf="@id/get_app_button"
+      android:layout_marginTop="5dp"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      android:text="1000"
+      />
+  <TextView
+      android:id="@+id/p1_name"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/p1_image"
+      android:layout_toRightOf="@id/get_app_button"
+      android:layout_marginTop="5dp"
+      android:textSize="11dp"
+      android:gravity="center"
+      style="@style/Aptoide.TextView.Medium.L.Black"
+      android:text="User 1"
+      />
+
+  <TextView
+      android:id="@+id/p1_score"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/p1_name"
+      android:layout_toRightOf="@id/get_app_button"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Regular.S"
+      android:text="300"
+      />
+
+  <ImageView
+      android:id="@+id/p2_image"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_below="@id/answer_status"
+      android:layout_toRightOf="@id/p1_image"
+      android:layout_marginLeft="25dp"
+      android:layout_marginTop="25dp"
+      android:src="@drawable/fake_app"
+      />
+
+  <TextView
+      android:id="@+id/p2_ranking"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/answer_status"
+      android:layout_toRightOf="@id/p1_ranking"
+      android:layout_marginTop="5dp"
+      android:layout_marginLeft="15dp"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      android:text="1000"
+      />
+  <TextView
+      android:id="@+id/p2_name"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/p2_image"
+      android:layout_toRightOf="@id/p1_name"
+      android:layout_marginLeft="15dp"
+      android:layout_marginTop="5dp"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Medium.L.Black"
+      android:text="User 1"
+      />
+
+  <TextView
+      android:id="@+id/p2_score"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/p2_name"
+      android:layout_toRightOf="@id/p1_score"
+      android:layout_marginLeft="15dp"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Regular.S"
+      android:text="300"
+      />
+
+  <ImageView
+      android:id="@+id/p3_image"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_below="@id/answer_status"
+      android:layout_toRightOf="@id/p2_image"
+      android:layout_marginLeft="25dp"
+      android:layout_marginTop="25dp"
+      android:src="@drawable/fake_app"
+      />
+
+  <TextView
+      android:id="@+id/p3_ranking"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/answer_status"
+      android:layout_toRightOf="@id/p2_ranking"
+      android:layout_marginTop="5dp"
+      android:layout_marginLeft="15dp"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      android:text="1000"
+      />
+  <TextView
+      android:id="@+id/p3_name"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/p3_image"
+      android:layout_toRightOf="@id/p2_name"
+      android:layout_marginLeft="15dp"
+      android:layout_marginTop="5dp"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Medium.L.Black"
+      android:text="User 1"
+      />
+
+  <TextView
+      android:id="@+id/p3_score"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/p3_name"
+      android:layout_toRightOf="@id/p2_name"
+      android:layout_marginLeft="15dp"
+      android:gravity="center"
+      android:textSize="12dp"
+      style="@style/Aptoide.TextView.Regular.S"
+      android:text="300"
+      />
+
+</RelativeLayout>

@@ -15,9 +15,9 @@ public class GameAnswer implements Post {
     private final App rightAnswer;
     private final List<String> leaderboard;
     private int score;
-    private final int gRanking;
-    private final int lRanking;
-    private final int fRanking;
+    private int gRanking;
+    private int lRanking;
+    private int fRanking;
     private final String status;
     private final String message;
     private final String abUrl;
@@ -124,6 +124,7 @@ public class GameAnswer implements Post {
     public int getgRanking() {
         return gRanking;
     }
+    public void setgRanking(int ranking){gRanking=ranking;}
 
     public int getlRanking() {
         return lRanking;
