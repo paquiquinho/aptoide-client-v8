@@ -2,8 +2,6 @@ package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.timeline.SocialCard;
-import cm.aptoide.pt.v8engine.social.data.CardType;
-import cm.aptoide.pt.v8engine.social.data.Game;
 import java.util.List;
 
 /**
@@ -19,8 +17,8 @@ public class Game1 extends Game {
     private boolean likedFromClick;
 
     public Game1(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
-                 int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, String wrongName, String wrongURL) {
-        super(cardId, rightAnswer, answerURL, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType);
+                 int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, int played, String wrongName, String wrongURL) {
+        super(cardId, rightAnswer, answerURL, question, score, gRanking, lRanking, fRanking, abUrl, isLiked, cardType, played);
         this.app = rightAnswer;
         this.wrongName = wrongName;
         this.wrongURL = wrongURL;

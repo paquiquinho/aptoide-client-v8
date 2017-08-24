@@ -189,17 +189,19 @@ public class Timeline {
     }
   }
 
-  public void updateGameScores(int score){
+  public void updateGameScores(int score, int played){
     List<Post> posts = timelinePostsRepository.getSavedCards();
 
     for(int i=0;i< posts.size();i++){
       if(posts.get(i).getType().isGame()){
         Game post = (Game) posts.get(i);
         post.setScore(score);
+        post.setPlayed(played);
       }
       if(posts.get(i).getType()==(CardType.GAMEANSWER)){
         GameAnswer post = (GameAnswer) posts.get(i);
         post.setScore(score);
+        post.setPlayed(played);
       }
     }
   }

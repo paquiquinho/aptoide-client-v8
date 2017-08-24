@@ -494,14 +494,14 @@ public class TimelinePresenter implements Presenter {
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null,0);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null,0);
       }
     } else {
       if (card.getRightAnswer()
@@ -511,14 +511,14 @@ public class TimelinePresenter implements Presenter {
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null,0);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null,0);
       }
     }
 
@@ -536,8 +536,14 @@ public class TimelinePresenter implements Presenter {
           if(updateLeaderboardResponse.isOk()){
             score = updateLeaderboardResponse.getData().getScore();
             int rankingPosition = updateLeaderboardResponse.getData().getPosition();
+            int played = updateLeaderboardResponse.getData().getPlayed();
             gameAnswer.setScore(score);
             gameAnswer.setgRanking(rankingPosition);
+            gameAnswer.setPlayed(played);
+            if(played==-1){
+              gameAnswer.setStatus("Out of tries!");
+              gameAnswer.setPoints(0);
+            }
             gameAnswer.setUser1(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(0).getName()
                 ,updateLeaderboardResponse.getData().getLeaderboard().get(0).getPosition(),
                 updateLeaderboardResponse.getData().getLeaderboard().get(0).getScore()));
@@ -547,7 +553,7 @@ public class TimelinePresenter implements Presenter {
             gameAnswer.setUser3(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(2).getName()
                 ,updateLeaderboardResponse.getData().getLeaderboard().get(2).getPosition(),
                 updateLeaderboardResponse.getData().getLeaderboard().get(2).getScore()));
-            timeline.updateGameScores(score);
+            timeline.updateGameScores(score, played);
             view.updateGameCardScores();
             view.updatePost(position);
           }

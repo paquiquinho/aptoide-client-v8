@@ -18,18 +18,19 @@ public class GameAnswer implements Post {
     private int gRanking;
     private int lRanking;
     private int fRanking;
-    private final String status;
+    private String status;
     private final String message;
     private final String abUrl;
     private boolean isLiked;
     private final CardType cardType;
-    private final int points;
+    private int points;
     private User user1;
     private User user2;
     private User user3;
+    private int played;
 
     public GameAnswer(String cardID, App rightAnswer, List<String> leaderboard, int score, int gRanking, int lRanking,
-                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType, int points, User user1, User user2, User user3){
+                      int fRanking, String status, String message, String abUrl, boolean isLiked, CardType cardType, int points, User user1, User user2, User user3, int played){
 
         this.cardID = cardID;
         this.rightAnswer = rightAnswer;
@@ -47,8 +48,8 @@ public class GameAnswer implements Post {
         this.user1 = user1;
         this.user2 = user2;
         this.user3 = user3;
+        this.played = played;
     }
-
 
 
   public static class User{
@@ -105,6 +106,10 @@ public class GameAnswer implements Post {
     return 0;
   }
 
+  public int getPlayed() {return played;}
+  public void setPlayed(int played) {this.played = played;}
+
+
   @Override public void addComment(SocialCard.CardComment postComment) {
 
   }
@@ -137,6 +142,7 @@ public class GameAnswer implements Post {
     public String getStatus() {
         return status;
     }
+    public void setStatus(String status){this.status=status;}
 
     public String getMessage() {
         return message;
@@ -145,6 +151,7 @@ public class GameAnswer implements Post {
     public int getPoints() {
         return points;
     }
+    public void setPoints(int points){this.points=points;}
 
     public void setScore(int score){this.score = score;}
 

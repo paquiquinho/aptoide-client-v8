@@ -67,6 +67,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
 
     @Override
     public void setPost(Game2 card, int position) {
+        int played;
+
         this.card = card;
 
         this.score.setText(String.valueOf(card.getScore()));
@@ -76,7 +78,10 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
         this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
             .getResources()), Application.getConfiguration()
             .getMarketName()));
-        this.headerSubTitle.setText("Card 1/10");
+        if(card.getPlayed() == -1)
+            this.headerSubTitle.setText("Out of Cards");
+        else
+            this.headerSubTitle.setText("Card "+String.valueOf(card.getPlayed())+"/10");
 
         if (card.getQuestionIcon() == null){
             itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);

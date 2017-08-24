@@ -70,6 +70,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
 
     @Override
     public void setPost(Game1 card, int position) {
+        int played;
+
         this.card = card;
 
         this.score.setText(String.valueOf(card.getScore()));
@@ -81,7 +83,10 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
         this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
             .getResources()), Application.getConfiguration()
             .getMarketName()));
-        this.headerSubTitle.setText("Card 1/10");
+        if(card.getPlayed() == -1)
+            this.headerSubTitle.setText("Out of Cards");
+        else
+            this.headerSubTitle.setText("Card "+String.valueOf(card.getPlayed())+"/10");
 
         //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
         if(Math.random()<0.5){

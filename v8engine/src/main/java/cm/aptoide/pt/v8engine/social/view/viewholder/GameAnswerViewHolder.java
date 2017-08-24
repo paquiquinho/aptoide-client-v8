@@ -108,18 +108,23 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
     @Override public void setPost(GameAnswer card, int position) {
 
-        final String increment;
+        String increment;
 
         if (card.getPoints() > 0) {
             increment ="(" + "+" + String.valueOf(card.getPoints()) + ")";
-        } else
+        } else if(card.getPoints()==0){
+            increment="(0)";
+        }else
             increment = "(" + String.valueOf(card.getPoints()) + ")";
 
         this.increment.setText(increment);
         if(card.getPoints() < 0)
             this.increment.setTextColor(Color.RED);
-        else
+        else if(card.getPoints()>0)
             this.increment.setTextColor(Color.GREEN);
+        else
+            this.increment.setTextColor(Color.BLUE);
+
         this.leaderboard.setText(String.valueOf(card.getgRanking()));
         ImageLoader.with(itemView.getContext())
             .load(card.getRightAnswer()
@@ -127,6 +132,8 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.answerStatus.setText(card.getStatus());
         if(card.getStatus() == "Wrong")
             this.answerStatus.setTextColor(Color.RED);
+        else if(card.getStatus()=="Out of tries!")
+            this.answerStatus.setTextColor(Color.BLUE);
         else
             this.answerStatus.setTextColor(Color.GREEN);
         this.answerMessage.setText(card.getMessage());
@@ -138,7 +145,10 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
             .getResources()), Application.getConfiguration()
                 .getMarketName()));
-        this.headerSubTitle.setText("Card 1/10");
+        if(card.getPlayed() == -1)
+            this.headerSubTitle.setText("Out of Cards");
+        else
+            this.headerSubTitle.setText("Card "+String.valueOf(card.getPlayed())+"/10");
 
         getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
             new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
