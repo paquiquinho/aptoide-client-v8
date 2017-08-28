@@ -155,20 +155,39 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/game_card_question3_icon_left"
-            android:textAlignment="center"
-            android:padding="10dp"
-            android:layout_marginTop="145dp"
+            android:gravity="center"
+            android:layout_marginTop="155dp"
             android:text="Answer1"
+            />
+
+        <ImageView
+            android:id="@id/left_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="150dp"
+            android:rotation="180"
+            android:src="@drawable/ic_more_arrow_right"
             />
 
         <ImageView
             android:id="@id/game_card_question3_icon_left"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/left_arrow"
             android:layout_marginTop="143dp"
             tools:src="@mipmap/ic_launcher"
+            />
+
+        <ImageView
+            android:id="@+id/right_arrow"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="150dp"
+            android:src="@drawable/ic_more_arrow_right"
             />
 
         <TextView
@@ -177,9 +196,8 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/game_card_question3_icon_right"
-            android:textAlignment="center"
-            android:padding="10dp"
-            android:layout_marginTop="145dp"
+            android:gravity="center"
+            android:layout_marginTop="155dp"
             android:text="Answer2"
             />
 
@@ -187,19 +205,18 @@
             android:id="@id/game_card_question3_icon_right"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/right_arrow"
             android:layout_marginTop="143dp"
             tools:src="@mipmap/ic_launcher"
             />
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="145dp"
-            android:src="@drawable/appstimeline_game_swipe_icon"
-            />
+        <!--<ImageView-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="145dp"-->
+            <!--android:src="@drawable/appstimeline_game_swipe_icon"-->
+            <!--/>-->
 
       </RelativeLayout>
 

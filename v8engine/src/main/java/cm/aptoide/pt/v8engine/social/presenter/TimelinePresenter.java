@@ -553,7 +553,7 @@ public class TimelinePresenter implements Presenter {
             gameAnswer.setUser3(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(2).getName()
                 ,updateLeaderboardResponse.getData().getLeaderboard().get(2).getPosition(),
                 updateLeaderboardResponse.getData().getLeaderboard().get(2).getScore()));
-            timeline.updateGameScores(score, played);
+            timeline.updateGameScores(score, played, rankingPosition);
             view.updateGameCardScores();
             view.updatePost(position);
           }

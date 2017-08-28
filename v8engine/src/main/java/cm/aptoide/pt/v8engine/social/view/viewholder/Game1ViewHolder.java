@@ -2,6 +2,7 @@ package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
@@ -36,6 +37,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     private final ImageView headerIcon;
     private final TextView headerTitle;
     private final TextView headerSubTitle;
+    private final ImageView leftArrow;
+    private final ImageView rightArrow;
 
     private Game1 card;
 
@@ -64,7 +67,8 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
         this.headerSubTitle =
                 (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_subtitle);
 
-
+        this.leftArrow = (ImageView) itemView.findViewById(R.id.left_arrow);
+        this.rightArrow = (ImageView) itemView.findViewById(R.id.right_arrow);
 
     }
 
@@ -98,9 +102,9 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
             this.rightAnswer.setText(card.getApp().getName());
         }
 
-        leftAnswer.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        leftArrow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
                 new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(leftAnswer.getText()))));
-        rightAnswer.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        rightArrow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
             new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position,
                 String.valueOf(rightAnswer.getText()))));
     }

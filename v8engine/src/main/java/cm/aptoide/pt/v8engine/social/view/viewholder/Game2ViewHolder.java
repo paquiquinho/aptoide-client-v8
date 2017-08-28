@@ -38,6 +38,9 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     private final TextView headerTitle;
     private final TextView headerSubTitle;
 
+    private final ImageView arrowLeft;
+    private final ImageView arrowRight;
+
     private Game2 card;
     private double rand;
     private int scoreValue;
@@ -62,6 +65,8 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
         this.headerSubTitle =
                 (TextView) itemView.findViewById(R.id.displayable_social_timeline_game_card_subtitle);
 
+        this.arrowLeft = (ImageView) itemView.findViewById(R.id.left_arrow);
+        this.arrowRight = (ImageView) itemView.findViewById(R.id.right_arrow);
 
     }
 
@@ -110,9 +115,9 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
         if(rand < 0.5){
             ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerLeft);
             ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerRight);
-            answerLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+            arrowLeft.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
                 new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon()))));
-            answerRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+            arrowRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
                 new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getWrongIcon()))));
         }
         else{

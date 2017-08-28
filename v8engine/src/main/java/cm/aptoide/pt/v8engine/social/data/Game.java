@@ -14,7 +14,7 @@ public abstract class Game implements Post {
     private final String answerURL;
     private final String question;
     private int score;
-    private final int gRanking;
+    private int gRanking;
     private final int lRanking;
     private final int fRanking;
     private final String abUrl;
@@ -69,6 +69,7 @@ public abstract class Game implements Post {
         return score;
     }
 
+    public void setgRanking(int position){this.gRanking=position;}
     public int getgRanking() {
         return gRanking;
     }
