@@ -19,6 +19,83 @@
         app:titleMarginStart="30dp"
         />
   </android.support.design.widget.AppBarLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
+      >
+
+    <ImageView
+        android:id="@+id/user_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/fake_app"
+        />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:layout_toRightOf="@id/user_icon"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="5dp"
+        style="@style/Aptoide.TextView.Medium.M"
+        android:text="MY NAME"
+        />
+
+    <TextView
+        android:id="@+id/rank_id"
+        android:layout_width="50dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/user_icon"
+        android:gravity="center"
+        style="@style/Aptoide.TextView.Medium.M"
+        android:text="Rank"
+        />
+    <TextView
+        android:id="@+id/rank_value"
+        android:layout_width="50dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/rank_id"
+        android:layout_toRightOf="@id/user_icon"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:text="100"
+        />
+    <include layout="@layout/separator_vertical"
+        android:id="@+id/separator"
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@id/rank_id"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"
+        />
+    <TextView
+        android:id="@+id/score_id"
+        android:layout_width="50dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/separator"
+        android:gravity="center"
+        style="@style/Aptoide.TextView.Medium.M"
+        android:text="Score"
+        />
+
+    <TextView
+        android:id="@+id/score_value"
+        android:layout_width="50dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/score_id"
+        android:layout_toRightOf="@id/separator"
+        android:layout_marginLeft="20dp"
+        android:gravity="center"
+        android:text="100"
+        />
+  </RelativeLayout>
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/fragment_leaderboard_list"

@@ -16,6 +16,7 @@ public class GetLeaderboardEntriesResponse extends BaseV7Response {
 
   public static class Data{
     private List<User> leaderboard;
+    private User current;
 
     public Data(){
 
@@ -23,6 +24,9 @@ public class GetLeaderboardEntriesResponse extends BaseV7Response {
 
     public List<User> getLeaderboard() {return leaderboard;}
     public void setLeaderboard(List<User> leaderboard) {this.leaderboard = leaderboard;}
+
+    public User getCurrent() {return current; }
+    public void setCurrent(User current) {this.current = current;}
   }
 
   public static class User{

@@ -20,6 +20,7 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.dataprovider.ws.v7.post.GetLeaderboardEntriesResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -49,7 +50,7 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.adapter = new LeaderboardAdapter(Collections.emptyList());
+    this.adapter = new LeaderboardAdapter(Collections.emptyList(), null);
     this.tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     this.sharedPreferences  = ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
 
@@ -65,6 +66,10 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
 
   @Override public void showLeaderboardEntries(List<LeaderboardEntry> entries) {
     adapter.updateLeaderboardEntries(entries);
+  }
+
+  @Override public void showCurrentUser(GetLeaderboardEntriesResponse.User user){
+    adapter.updateCurrentUser(user);
   }
 
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {

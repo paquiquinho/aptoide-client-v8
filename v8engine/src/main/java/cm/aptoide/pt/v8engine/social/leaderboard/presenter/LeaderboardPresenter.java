@@ -6,6 +6,8 @@ import cm.aptoide.pt.v8engine.presenter.Presenter;
 import cm.aptoide.pt.v8engine.presenter.View;
 import cm.aptoide.pt.v8engine.social.leaderboard.data.Leaderboard;
 import cm.aptoide.pt.v8engine.social.leaderboard.view.LeaderboardView;
+import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -40,6 +42,15 @@ public class LeaderboardPresenter implements Presenter {
         .flatMap(__-> leaderboard.getLeaderboardEntries())
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(leaderboardEntries->view.showLeaderboardEntries(leaderboardEntries))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(leaderboardEntries -> {},
+            throwable -> crashReport.log(throwable));
+
+    view.getLifecycle()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__-> leaderboard.getCurrentUser())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(currentUser -> view.showCurrentUser(currentUser))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(leaderboardEntries -> {},
             throwable -> crashReport.log(throwable));
