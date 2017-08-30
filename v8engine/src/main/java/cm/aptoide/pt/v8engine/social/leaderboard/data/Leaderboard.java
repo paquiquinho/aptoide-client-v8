@@ -5,7 +5,9 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetLeaderboardEntriesRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.GetUserGameInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.GetLeaderboardEntriesResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.post.GetUserGameInfoResponse;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -42,10 +44,10 @@ public class Leaderboard {
             .getLeaderboard())).map(users -> mapper.map(users));
   }
 
-  public Observable<GetLeaderboardEntriesResponse.User> getCurrentUser(){
-    return GetLeaderboardEntriesRequest.of("", "", 0, 10, bodyInterceptor, httpClient,
+  public Observable<GetUserGameInfoResponse.User> getCurrentUser(){
+    return GetUserGameInfoRequest.of("", bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
-        .flatMap(getLeaderboardEntriesResponse -> Observable.just(getLeaderboardEntriesResponse.getData().getCurrent()));
+        .flatMap(getUserGameInfoResponse -> Observable.just(getUserGameInfoResponse.getData().getCurrent()));
   }
 }

@@ -40,6 +40,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.GetLeaderboardEntriesResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.post.GetUserGameInfoResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
@@ -268,6 +269,10 @@ public abstract class V7<U, B> extends WebService<V7.Interfaces, U> {
 
     @POST Observable<GetLeaderboardEntriesResponse> getLeaderboardEntries(@Url String url,
         @retrofit2.http.Body GetLeaderboardEntriesRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST Observable<GetUserGameInfoResponse> getUserGameInfo(@Url String url,
+        @retrofit2.http.Body GetUserGameInfoRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(

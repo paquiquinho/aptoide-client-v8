@@ -16,11 +16,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.post.GetLeaderboardEntriesResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.post.GetUserGameInfoResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
@@ -42,6 +45,10 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
 
   private LeaderboardAdapter adapter;
   private RecyclerView list;
+  private ImageView userIcon;
+  private TextView userRank;
+  private TextView userScore;
+  private TextView userName;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private Toolbar toolbar;
@@ -68,8 +75,11 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     adapter.updateLeaderboardEntries(entries);
   }
 
-  @Override public void showCurrentUser(GetLeaderboardEntriesResponse.User user){
-    adapter.updateCurrentUser(user);
+  @Override public void showCurrentUser(GetUserGameInfoResponse.User user){
+    userIcon.setImageResource(R.drawable.fake_app);
+    userRank.setText(String.valueOf(user.getPosition()));
+    userScore.setText(String.valueOf(user.getScore()));
+    userName.setText(user.getName());
   }
 
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
@@ -83,6 +93,10 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient();
     final Converter.Factory defaultConverter = WebService.getDefaultConverter();
 
+    userIcon = (ImageView) view.findViewById(R.id.user_icon);
+    userRank = (TextView) view.findViewById(R.id.rank_value);
+    userScore = (TextView) view.findViewById(R.id.score_value);
+    userName = (TextView) view.findViewById(R.id.user_name);
 
     list = (RecyclerView) view.findViewById(R.id.fragment_leaderboard_list);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
