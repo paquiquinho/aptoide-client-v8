@@ -5,14 +5,12 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetLeaderboardEntriesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.GetUserGameInfoRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.GetLeaderboardEntriesResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.GetUserGameInfoResponse;
+import cm.aptoide.pt.v8engine.social.data.UserGameInfo;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.Single;
 
 /**
  * Created by franciscocalado on 8/17/17.
@@ -25,14 +23,16 @@ public class Leaderboard {
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private LeaderboardEntryMapper mapper;
+  private UserGameInfo userInfo;
 
   public Leaderboard(BodyInterceptor<BaseBody> bodyBodyInterceptor, OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences){
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, UserGameInfo userGameInfo){
     this.bodyInterceptor = bodyBodyInterceptor;
     this.httpClient = okHttpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.userInfo=userGameInfo;
     mapper = new LeaderboardEntryMapper();
   }
 
@@ -45,9 +45,7 @@ public class Leaderboard {
   }
 
   public Observable<GetUserGameInfoResponse.User> getCurrentUser(){
-    return GetUserGameInfoRequest.of("", bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .flatMap(getUserGameInfoResponse -> Observable.just(getUserGameInfoResponse.getData().getCurrent()));
+    return userInfo.getCurrentUser("", bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 }

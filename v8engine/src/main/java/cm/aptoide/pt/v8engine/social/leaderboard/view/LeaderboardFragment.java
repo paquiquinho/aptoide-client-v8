@@ -27,6 +27,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.GetUserGameInfoResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.social.data.UserGameInfo;
 import cm.aptoide.pt.v8engine.social.leaderboard.data.Leaderboard;
 import cm.aptoide.pt.v8engine.social.leaderboard.data.LeaderboardEntry;
 import cm.aptoide.pt.v8engine.social.leaderboard.presenter.LeaderboardPresenter;
@@ -53,6 +54,7 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   private SharedPreferences sharedPreferences;
   private Toolbar toolbar;
   private BackButton backButton;
+  private UserGameInfo userGameInfo;
 
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     this.adapter = new LeaderboardAdapter(Collections.emptyList(), null);
     this.tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
     this.sharedPreferences  = ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    this.userGameInfo = ((V8Engine) getContext().getApplicationContext()).getUserGameInfo();
 
   }
 
@@ -102,7 +105,7 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     list.setAdapter(adapter);
     attachPresenter(new LeaderboardPresenter(this, new Leaderboard(baseBodyInterceptorV7, defaultClient, defaultConverter,
-        tokenInvalidator, sharedPreferences), CrashReport.getInstance()), savedInstanceState);
+        tokenInvalidator, sharedPreferences, userGameInfo), CrashReport.getInstance()), savedInstanceState);
 
   }
 

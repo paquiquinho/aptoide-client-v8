@@ -234,14 +234,17 @@ public class TimelinePresenter implements Presenter {
             account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                 : timeline.getTimelineLoginPost(), timeline.getCards(),
             (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> {
-          if (cards != null && cards.size() > 0) {
-            showCardsAndHideProgress(cards);
-          } else {
-            view.showGenericViewError();
-          }
-        })
+        .doOnNext(posts -> timeline.getUserGameInfo()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess(user -> {
+              timeline.updateGameScores(user.getScore(), user.getPlayed(), user.getPosition());
+              view.updateGameCardScores();
+              if (posts != null && posts.size() > 0) {
+                showCardsAndHideProgress(posts);
+              } else {
+                view.showGenericViewError();
+              }
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
@@ -262,8 +265,17 @@ public class TimelinePresenter implements Presenter {
                 account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                     : timeline.getTimelineLoginPost(), timeline.getFreshCards(),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> showCardsAndHideRefresh(cards))
+            .doOnNext(posts -> timeline.getUserGameInfo()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(user -> {
+                  timeline.updateGameScores(user.getScore(),user.getPlayed(),user.getPosition());
+                  view.updateGameCardScores();
+                  if (posts != null && posts.size() > 0) {
+                    showCardsAndHideProgress(posts);
+                  } else {
+                    view.showGenericViewError();
+                  }
+                }))
             .doOnError(throwable -> {
               crashReport.log(throwable);
               view.showGenericViewError();
@@ -454,15 +466,14 @@ public class TimelinePresenter implements Presenter {
                   Logger.d(this.getClass()
                       .getCanonicalName(), "Clicked on: " + event.getAnswerText());
                 } else if (type.equals(CardType.GAMEANSWER)) {
-                    if(cardTouchEvent instanceof LeaderboardTouchEvent){
-                      timelineNavigation.navigateToLeaderboard();
-                    }
-                    else {
-                      GameAnswer card = (GameAnswer) post;
-                      timelineNavigation.navigateToAppView(card.getRightAnswer()
-                          .getId(), card.getRightAnswer()
-                          .getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
-                    }
+                  if (cardTouchEvent instanceof LeaderboardTouchEvent) {
+                    timelineNavigation.navigateToLeaderboard();
+                  } else {
+                    GameAnswer card = (GameAnswer) post;
+                    timelineNavigation.navigateToAppView(card.getRightAnswer()
+                        .getId(), card.getRightAnswer()
+                        .getPackageName(), AppViewFragment.OpenType.OPEN_ONLY);
+                  }
                 }
               }
             })
@@ -483,9 +494,6 @@ public class TimelinePresenter implements Presenter {
     int points = 10;
     final GameAnswer answer;
 
-
-
-
     if (card instanceof Game2) {
       if (card.getRightAnswer()
           .getIcon() == event.getAnswerText()) {
@@ -494,14 +502,15 @@ public class TimelinePresenter implements Presenter {
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null,0);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points, null, null, null, 0);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null,0);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2, null, null, null,
+                0);
       }
     } else {
       if (card.getRightAnswer()
@@ -511,54 +520,81 @@ public class TimelinePresenter implements Presenter {
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points,null,null,null,0);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, points, null, null, null, 0);
       } else {
         status = "Wrong";
         message = "You'll have to try again!";
         answer =
             new GameAnswer(String.valueOf(Math.random() * 1000 + 3000), card.getRightAnswer(), null,
                 score, card.getgRanking(), card.getlRanking(), card.getfRanking(), status, message,
-                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2,null,null,null,0);
+                card.getAbUrl(), card.isLiked(), CardType.GAMEANSWER, -points / 2, null, null, null,
+                0);
       }
     }
 
     return answer;
   }
 
-  private void updateAnswer(GameAnswer gameAnswer, int position){
+  private void updateAnswer(GameAnswer gameAnswer, int position) {
     boolean answer;
-    if(gameAnswer.getStatus() == "Correct")
-      answer=true;
-    else
-      answer=false;
+    if (gameAnswer.getStatus() == "Correct") {
+      answer = true;
+    } else {
+      answer = false;
+    }
 
-    timeline.updateLeaderboard(answer).observeOn(AndroidSchedulers.mainThread()).subscribe(updateLeaderboardResponse -> {
-          if(updateLeaderboardResponse.isOk()){
-            score = updateLeaderboardResponse.getData().getScore();
-            int rankingPosition = updateLeaderboardResponse.getData().getPosition();
-            int played = updateLeaderboardResponse.getData().getPlayed();
+    timeline.updateLeaderboard(answer)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(updateLeaderboardResponse -> {
+          if (updateLeaderboardResponse.isOk()) {
+            score = updateLeaderboardResponse.getData()
+                .getScore();
+            int rankingPosition = updateLeaderboardResponse.getData()
+                .getPosition();
+            int played = updateLeaderboardResponse.getData()
+                .getPlayed();
             gameAnswer.setScore(score);
             gameAnswer.setgRanking(rankingPosition);
             gameAnswer.setPlayed(played);
-            if(played==-1){
+            if (played == -1) {
               gameAnswer.setStatus("Out of tries!");
               gameAnswer.setPoints(0);
             }
-            gameAnswer.setUser1(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(0).getName()
-                ,updateLeaderboardResponse.getData().getLeaderboard().get(0).getPosition(),
-                updateLeaderboardResponse.getData().getLeaderboard().get(0).getScore()));
-            gameAnswer.setUser2(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(1).getName()
-                ,updateLeaderboardResponse.getData().getLeaderboard().get(1).getPosition(),
-                updateLeaderboardResponse.getData().getLeaderboard().get(1).getScore()));
-            gameAnswer.setUser3(new GameAnswer.User(updateLeaderboardResponse.getData().getLeaderboard().get(2).getName()
-                ,updateLeaderboardResponse.getData().getLeaderboard().get(2).getPosition(),
-                updateLeaderboardResponse.getData().getLeaderboard().get(2).getScore()));
+            gameAnswer.setUser1(new GameAnswer.User(updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(0)
+                .getName(), updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(0)
+                .getPosition(), updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(0)
+                .getScore()));
+            gameAnswer.setUser2(new GameAnswer.User(updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(1)
+                .getName(), updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(1)
+                .getPosition(), updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(1)
+                .getScore()));
+            gameAnswer.setUser3(new GameAnswer.User(updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(2)
+                .getName(), updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(2)
+                .getPosition(), updateLeaderboardResponse.getData()
+                .getLeaderboard()
+                .get(2)
+                .getScore()));
             timeline.updateGameScores(score, played, rankingPosition);
             view.updateGameCardScores();
             view.updatePost(position);
           }
-        },
-        throwable -> throwable.printStackTrace());
+        }, throwable -> throwable.printStackTrace());
   }
 
   private void clickOnLikeSocialPost() {
@@ -924,6 +960,8 @@ public class TimelinePresenter implements Presenter {
   @NonNull private List<Post> mergeStatsPostWithPosts(Post post, List<Post> posts) {
     List<Post> postsWithStatsPost = new ArrayList<>();
     postsWithStatsPost.add(post);
+    //if(post2!=null)
+    //  postsWithStatsPost.add(post2);
     postsWithStatsPost.addAll(posts);
     return postsWithStatsPost;
   }

@@ -53,6 +53,7 @@ import cm.aptoide.pt.v8engine.social.data.Timeline;
 import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
 import cm.aptoide.pt.v8engine.social.data.TimelineService;
+import cm.aptoide.pt.v8engine.social.data.UserGameInfo;
 import cm.aptoide.pt.v8engine.social.data.share.ShareDialogFactory;
 import cm.aptoide.pt.v8engine.social.data.share.ShareDialogInterface;
 import cm.aptoide.pt.v8engine.social.data.share.ShareEvent;
@@ -130,6 +131,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   private DateCalculator dateCalculator;
   private boolean postIndicator;
   private boolean progressIndicator;
+  private UserGameInfo userGameInfo;
   private int score;
 
   public static Fragment newInstance(String action, Long userId, Long storeId,
@@ -188,6 +190,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
         ((V8Engine) getContext().getApplicationContext()).getDefaultClient(),
         WebService.getDefaultConverter(), new TimelineResponseCardMapper(), tokenInvalidator,
         sharedPreferences);
+    userGameInfo = ((V8Engine) getContext().getApplicationContext()).getUserGameInfo();
     score = 0;
 
 
@@ -259,7 +262,7 @@ public class TimelineFragment extends FragmentView implements TimelineView {
     Timeline timeline =
         new Timeline(timelineService, installManager, new DownloadFactory(), timelineAnalytics,
             timelinePostsRepository, baseBodyInterceptorV7, defaultClient, defaultConverter,
-            tokenInvalidator, sharedPreferences);
+            tokenInvalidator, sharedPreferences, userGameInfo);
 
     TimelineNavigator timelineNavigation = new TimelineNavigator(getFragmentNavigator(),
         getContext().getString(R.string.timeline_title_likes), tabNavigator);
@@ -517,12 +520,6 @@ public class TimelineFragment extends FragmentView implements TimelineView {
   @Override public void hidePostProgressIndicator() {
     postIndicator = false;
     hideProgressIndicator();
-  }
-
-  @Override public int updateScore(int score) {
-    if(this.score+score >= 0)
-      this.score+=score;
-    return this.score;
   }
 
   public void updateGameCardScores(){

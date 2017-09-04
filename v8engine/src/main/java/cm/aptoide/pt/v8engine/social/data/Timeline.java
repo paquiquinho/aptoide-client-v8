@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.UpdateLeaderboardRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.post.GetUserGameInfoResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.UpdateLeaderboardResponse;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.Application;
@@ -43,12 +44,13 @@ public class Timeline {
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private UserGameInfo userInfo;
 
   public Timeline(TimelineService service, InstallManager installManager,
       DownloadFactory downloadFactory, TimelineAnalytics timelineAnalytics,
       TimelinePostsRepository timelinePostsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, UserGameInfo userInfo) {
     this.service = service;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -59,6 +61,7 @@ public class Timeline {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.userInfo=userInfo;
   }
 
   public Single<List<Post>> getCards() {
@@ -124,6 +127,11 @@ public class Timeline {
 
   public Single<Post> getTimelineStats() {
     return service.getTimelineStats();
+  }
+
+  public Single<GetUserGameInfoResponse.User> getUserGameInfo(){
+    return userInfo.getCurrentUser("", bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences).toSingle();
   }
 
   public Single<Post> getTimelineLoginPost() {

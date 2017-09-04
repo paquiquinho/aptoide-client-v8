@@ -158,6 +158,7 @@ import cm.aptoide.pt.v8engine.repository.RepositoryFactory;
 import cm.aptoide.pt.v8engine.social.TimelineRepositoryFactory;
 import cm.aptoide.pt.v8engine.social.data.TimelinePostsRepository;
 import cm.aptoide.pt.v8engine.social.data.TimelineResponseCardMapper;
+import cm.aptoide.pt.v8engine.social.data.UserGameInfo;
 import cm.aptoide.pt.v8engine.spotandshare.AccountGroupNameProvider;
 import cm.aptoide.pt.v8engine.spotandshare.ShareApps;
 import cm.aptoide.pt.v8engine.spotandshare.SpotAndShareAnalytics;
@@ -282,6 +283,7 @@ public abstract class V8Engine extends Application {
   private BillingSyncManager billingSyncManager;
   private TimelineRepositoryFactory timelineRepositoryFactory;
   private BillingIdResolver billingiIdResolver;
+  private UserGameInfo userGameInfo;
 
   /**
    * call after this instance onCreate()
@@ -505,6 +507,14 @@ public abstract class V8Engine extends Application {
 
   public SharedPreferences getDefaultSharedPreferences() {
     return PreferenceManager.getDefaultSharedPreferences(this);
+  }
+
+  public UserGameInfo getUserGameInfo(){
+    if(userGameInfo==null){
+      userGameInfo = new UserGameInfo(baseBodyInterceptorV7, defaultClient, WebService.getDefaultConverter(),
+          tokenInvalidator, getDefaultSharedPreferences());
+    }
+    return userGameInfo;
   }
 
   public GroupNameProvider getGroupNameProvider() {
