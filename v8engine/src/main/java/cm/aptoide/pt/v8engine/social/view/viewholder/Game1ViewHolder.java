@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import cm.aptoide.pt.preferences.Application;
@@ -40,9 +41,13 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
     private final ImageView leftArrow;
     private final ImageView rightArrow;
 
+    private final ProgressBar scoreProgress;
+    private final ProgressBar leaderboardProgress;
+
+
     private Game1 card;
 
-    private int scoreValue;
+    private double rand;
 
 
 
@@ -70,6 +75,11 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
         this.leftArrow = (ImageView) itemView.findViewById(R.id.left_arrow);
         this.rightArrow = (ImageView) itemView.findViewById(R.id.right_arrow);
 
+        this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
+        this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
+
+
+        rand = Math.random();
     }
 
     @Override
@@ -93,7 +103,7 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
             this.headerSubTitle.setText("Card "+String.valueOf(card.getPlayed())+"/10");
 
         //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
-        if(Math.random()<0.5){
+        if(rand<0.5){
             this.leftAnswer.setText(card.getApp().getName());
             this.rightAnswer.setText(card.getWrongName());
         }
@@ -107,6 +117,19 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
         rightArrow.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
             new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position,
                 String.valueOf(rightAnswer.getText()))));
+
+        if(card.getScore()==-1){
+            scoreProgress.setVisibility(View.VISIBLE);
+            leaderboardProgress.setVisibility(View.VISIBLE);
+            score.setVisibility(View.INVISIBLE);
+            leaderboard.setVisibility(View.INVISIBLE);
+        }
+        else{
+            scoreProgress.setVisibility(View.INVISIBLE);
+            leaderboardProgress.setVisibility(View.INVISIBLE);
+            score.setVisibility(View.VISIBLE);
+            leaderboard.setVisibility(View.VISIBLE);
+        }
     }
 
     private Spannable getStyledTitle(Context context, String title, String coloredTextPart) {

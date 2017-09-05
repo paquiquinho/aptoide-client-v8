@@ -72,6 +72,16 @@
           android:src="@drawable/appstimeline_recommendation_compass_icon"
           />
 
+      <ProgressBar
+          android:id="@+id/rank_progress"
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:layout_toRightOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
+          android:layout_marginLeft="7dp"
+          android:layout_marginTop="15dp"
+          android:visibility="visible"
+          android:indeterminate="true" />
+
       <TextView
           android:id="@id/displayable_social_timeline_game_card_leaderboard"
           android:layout_width="wrap_content"
@@ -80,6 +90,7 @@
           android:layout_marginRight="3dp"
           android:layout_marginTop="18dp"
           android:text="#1234"
+          android:visibility="invisible"
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
 
@@ -101,8 +112,19 @@
           android:layout_marginRight="5dp"
           android:layout_marginTop="18dp"
           android:text="2000"
+          android:visibility="invisible"
           style="@style/Aptoide.TextView.Regular.XS.Grey"
           />
+
+      <ProgressBar
+          android:id="@+id/score_progress"
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:layout_toLeftOf="@id/displayable_social_timeline_game_card_leaderboard_icon"
+          android:layout_marginRight="7dp"
+          android:layout_marginTop="15dp"
+          android:visibility="visible"
+          android:indeterminate="true" />
 
       <View
           android:id="@+id/card_custom_view_line_separator"

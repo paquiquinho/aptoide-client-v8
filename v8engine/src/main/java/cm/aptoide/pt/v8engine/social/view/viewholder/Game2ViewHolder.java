@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -41,9 +42,11 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
     private final ImageView arrowLeft;
     private final ImageView arrowRight;
 
+    private final ProgressBar scoreProgress;
+    private final ProgressBar leaderboardProgress;
+
     private Game2 card;
     private double rand;
-    private int scoreValue;
 
 
     public Game2ViewHolder(View itemView,
@@ -68,11 +71,16 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
         this.arrowLeft = (ImageView) itemView.findViewById(R.id.left_arrow);
         this.arrowRight = (ImageView) itemView.findViewById(R.id.right_arrow);
 
+        this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
+        this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
+
+        rand = Math.random();
+
+
     }
 
     @Override
     public void setPost(Game2 card, int position) {
-        int played;
 
         this.card = card;
 
@@ -110,7 +118,6 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
             ImageLoader.with(itemView.getContext()).load(card.getQuestionIcon(), questionIcon);
             this.question.setText(card.getQuestion());
         }
-        rand = Math.random();
         //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
         if(rand < 0.5){
             ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerLeft);
@@ -129,7 +136,18 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
                 new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(card.getApp().getIcon()))));
         }
 
-
+        if(card.getScore()==-1){
+            scoreProgress.setVisibility(View.VISIBLE);
+            leaderboardProgress.setVisibility(View.VISIBLE);
+            score.setVisibility(View.INVISIBLE);
+            leaderboard.setVisibility(View.INVISIBLE);
+        }
+        else{
+            scoreProgress.setVisibility(View.INVISIBLE);
+            leaderboardProgress.setVisibility(View.INVISIBLE);
+            score.setVisibility(View.VISIBLE);
+            leaderboard.setVisibility(View.VISIBLE);
+        }
 
     }
 

@@ -234,17 +234,18 @@ public class TimelinePresenter implements Presenter {
             account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                 : timeline.getTimelineLoginPost(), timeline.getCards(),
             (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
-        .doOnNext(posts -> timeline.getUserGameInfo()
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(user -> {
-              timeline.updateGameScores(user.getScore(), user.getPlayed(), user.getPosition());
-              view.updateGameCardScores();
-              if (posts != null && posts.size() > 0) {
-                showCardsAndHideProgress(posts);
-              } else {
-                view.showGenericViewError();
-              }
-            }))
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext(cards -> {
+          if (cards != null && cards.size() > 0) {
+            showCardsAndHideProgress(cards);
+          } else {
+            view.showGenericViewError();
+          }
+        }).flatMapSingle(__ -> timeline.getUserGameInfo()
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSuccess(user -> {
+          timeline.updateGameScores(user.getScore(),user.getPlayed(),user.getPosition());
+          view.updateGameCardScores();}))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
@@ -265,22 +266,18 @@ public class TimelinePresenter implements Presenter {
                 account.isLoggedIn() || userId != null ? timeline.getTimelineStats()
                     : timeline.getTimelineLoginPost(), timeline.getFreshCards(),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
-            .doOnNext(posts -> timeline.getUserGameInfo()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(user -> {
-                  timeline.updateGameScores(user.getScore(),user.getPlayed(),user.getPosition());
-                  view.updateGameCardScores();
-                  if (posts != null && posts.size() > 0) {
-                    showCardsAndHideProgress(posts);
-                  } else {
-                    view.showGenericViewError();
-                  }
-                }))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(cards -> showCardsAndHideRefresh(cards))
             .doOnError(throwable -> {
               crashReport.log(throwable);
               view.showGenericViewError();
             })
             .retry())
+        .flatMapSingle(__ -> timeline.getUserGameInfo()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess(user -> {
+              timeline.updateGameScores(user.getScore(),user.getPlayed(),user.getPosition());
+              view.updateGameCardScores();}))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         });

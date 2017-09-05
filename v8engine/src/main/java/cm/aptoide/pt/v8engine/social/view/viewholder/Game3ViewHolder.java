@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,9 +46,12 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
     private final ImageView arrowLeft;
     private final ImageView arrowRight;
 
-    private Game3 card;
-    private int scoreValue;
+    private final ProgressBar scoreProgress;
+    private final ProgressBar leaderboardProgress;
 
+    private double rand;
+
+    private Game3 card;
 
     public Game3ViewHolder(View itemView,
         PublishSubject<CardTouchEvent> cardTouchEventPublishSubject,
@@ -72,6 +76,11 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
 
         this.arrowLeft = (ImageView) itemView.findViewById(R.id.left_arrow);
         this.arrowRight = (ImageView) itemView.findViewById(R.id.right_arrow);
+
+        this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
+        this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
+
+        rand=Math.random();
 
 
     }
@@ -110,7 +119,7 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
         this.question.setText(card.getQuestion());
 
         //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
-        if(Math.random()<0.5){
+        if(rand<0.5){
             ImageLoader.with(itemView.getContext()).load(card.getApp().getIcon(), answerLeftIcon);
             this.answerLeft.setText(card.getApp().getName());
             ImageLoader.with(itemView.getContext()).load(card.getWrongIcon(), answerRightIcon);
@@ -127,6 +136,19 @@ public class Game3ViewHolder extends PostViewHolder<Game3> {
                 new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerLeft.getText()))));
         arrowRight.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
                 new GameCardTouchEvent(card, CardTouchEvent.Type.BODY, position, String.valueOf(answerRight.getText()))));
+
+        if(card.getScore()==-1){
+            scoreProgress.setVisibility(View.VISIBLE);
+            leaderboardProgress.setVisibility(View.VISIBLE);
+            score.setVisibility(View.INVISIBLE);
+            leaderboard.setVisibility(View.INVISIBLE);
+        }
+        else{
+            scoreProgress.setVisibility(View.INVISIBLE);
+            leaderboardProgress.setVisibility(View.INVISIBLE);
+            score.setVisibility(View.VISIBLE);
+            leaderboard.setVisibility(View.VISIBLE);
+        }
     }
 
     private Spannable getStyledTitle(Context context, String title, String coloredTextPart) {
