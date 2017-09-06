@@ -235,17 +235,16 @@ public class TimelinePresenter implements Presenter {
                 : timeline.getTimelineLoginPost(), timeline.getCards(),
             (statisticsPost, posts) -> mergeStatsPostWithPosts(statisticsPost, posts)))
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(cards -> {
-          if (cards != null && cards.size() > 0) {
-            showCardsAndHideProgress(cards);
-          } else {
-            view.showGenericViewError();
-          }
-        }).flatMapSingle(__ -> timeline.getUserGameInfo()
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSuccess(user -> {
-          timeline.updateGameScores(user.getScore(),user.getPlayed(),user.getPosition());
-          view.updateGameCardScores();}))
+        .flatMapSingle(cards -> timeline.getUserGameInfo()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess(user -> {
+              timeline.updateGameScores(user.getScore(), user.getPlayed(), user.getPosition());
+              if (cards != null && cards.size() > 0) {
+                showCardsAndHideProgress(cards);
+              } else {
+                view.showGenericViewError();
+              }
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         }, throwable -> {
@@ -267,17 +266,17 @@ public class TimelinePresenter implements Presenter {
                     : timeline.getTimelineLoginPost(), timeline.getFreshCards(),
                 (post, posts) -> mergeStatsPostWithPosts(post, posts)))
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext(cards -> showCardsAndHideRefresh(cards))
             .doOnError(throwable -> {
               crashReport.log(throwable);
               view.showGenericViewError();
             })
-            .retry())
-        .flatMapSingle(__ -> timeline.getUserGameInfo()
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(user -> {
-              timeline.updateGameScores(user.getScore(),user.getPlayed(),user.getPosition());
-              view.updateGameCardScores();}))
+            .retry()
+            .flatMapSingle(cards -> timeline.getUserGameInfo()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(user -> {
+                  timeline.updateGameScores(user.getScore(), user.getPlayed(), user.getPosition());
+                  showCardsAndHideRefresh(cards);
+                })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(cards -> {
         });
