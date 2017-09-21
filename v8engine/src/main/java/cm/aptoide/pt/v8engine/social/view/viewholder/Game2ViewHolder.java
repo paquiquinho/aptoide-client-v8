@@ -2,13 +2,11 @@ package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.provider.ContactsContract;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cm.aptoide.pt.preferences.Application;
@@ -16,10 +14,8 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.CardTouchEvent;
-import cm.aptoide.pt.v8engine.social.data.Game1;
 import cm.aptoide.pt.v8engine.social.data.Game2;
 import cm.aptoide.pt.v8engine.social.data.GameCardTouchEvent;
-import cm.aptoide.pt.v8engine.social.view.viewholder.PostViewHolder;
 import cm.aptoide.pt.v8engine.view.recycler.displayable.SpannableFactory;
 import rx.subjects.PublishSubject;
 
@@ -91,10 +87,10 @@ public class Game2ViewHolder extends PostViewHolder<Game2> {
         this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
             .getResources()), Application.getConfiguration()
             .getMarketName()));
-        if(card.getPlayed() == -1)
+        if(card.getCardsLeft() == -1)
             this.headerSubTitle.setText("Out of Cards");
         else
-            this.headerSubTitle.setText("Card "+String.valueOf(card.getPlayed())+"/10");
+            this.headerSubTitle.setText("Card "+String.valueOf(card.getCardsLeft())+"/10");
 
         if (card.getQuestionIcon() == null){
             itemView.findViewById(R.id.icon_question).setVisibility(View.GONE);

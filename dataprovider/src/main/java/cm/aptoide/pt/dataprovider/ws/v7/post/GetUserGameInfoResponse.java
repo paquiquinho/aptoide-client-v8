@@ -29,6 +29,7 @@ public class GetUserGameInfoResponse extends BaseV7Response {
     private int position;
     private int score;
     private int played;
+    private String avatar;
 
     public User(){
 
@@ -45,5 +46,8 @@ public class GetUserGameInfoResponse extends BaseV7Response {
 
     public int getPlayed() {return played;}
     public void setPlayed(int played) {this.played = played;}
+
+    public String getAvatar() {return avatar;}
+    public void setAvatar(String avatar) {this.avatar = avatar;}
   }
 }

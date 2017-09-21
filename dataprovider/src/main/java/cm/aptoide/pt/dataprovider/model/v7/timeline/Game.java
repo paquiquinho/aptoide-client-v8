@@ -20,7 +20,8 @@ public class Game implements TimelineCard {
     @Getter private final App rightAnswer;
     @Getter private final int gameType;
     @Getter private final String answerURL;
-    @Getter private final List<WrongAnswer> wrongAnswer;
+    @Getter private final WrongAnswer wrongAnswer;
+    @Getter private final WrongAnswer displayApp;
     @Getter private final String question;
     @Getter private final GameRankings rankings;
     @Getter private final Ab ab;
@@ -31,7 +32,9 @@ public class Game implements TimelineCard {
     @JsonCreator
     public Game(@JsonProperty("uid") String cardId, @JsonProperty("question") String question, @JsonProperty("questionType") int gameType,
                 @JsonProperty("timestamp") Date timestamp, @JsonProperty("app") App rightAnswer, @JsonProperty("answerURL") String answerURL,
-                @JsonProperty("wrongAnswer") List<WrongAnswer> wrongAnswer, @JsonProperty("rankings") GameRankings rankings, @JsonProperty("ab") Ab ab) {
+                @JsonProperty("displayApp") WrongAnswer displayApp, @JsonProperty("wrongAnswer") WrongAnswer wrongAnswer,
+                @JsonProperty("gameStats") GameRankings rankings, @JsonProperty("ab") Ab ab) {
+        this.displayApp = displayApp;
         this.ab = ab;
         this.cardId = cardId;
         this.timestamp = timestamp;

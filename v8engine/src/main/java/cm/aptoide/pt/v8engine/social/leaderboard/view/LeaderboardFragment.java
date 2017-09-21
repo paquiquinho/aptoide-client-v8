@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.social.leaderboard.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,21 +21,25 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.post.GetLeaderboardEntriesResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.GetUserGameInfoResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.V8Engine;
 import cm.aptoide.pt.v8engine.crashreports.CrashReport;
+import cm.aptoide.pt.v8engine.networking.image.ImageLoader;
 import cm.aptoide.pt.v8engine.social.data.UserGameInfo;
 import cm.aptoide.pt.v8engine.social.leaderboard.data.Leaderboard;
 import cm.aptoide.pt.v8engine.social.leaderboard.data.LeaderboardEntry;
+import cm.aptoide.pt.v8engine.social.leaderboard.presenter.LeaderboardNavigator;
 import cm.aptoide.pt.v8engine.social.leaderboard.presenter.LeaderboardPresenter;
 import cm.aptoide.pt.v8engine.view.BackButton;
 import cm.aptoide.pt.v8engine.view.fragment.FragmentView;
+import cm.aptoide.pt.v8engine.view.navigator.TabNavigator;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by franciscocalado on 8/17/17.
@@ -55,34 +58,65 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
   private Toolbar toolbar;
   private BackButton backButton;
   private UserGameInfo userGameInfo;
-
-
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    this.adapter = new LeaderboardAdapter(Collections.emptyList(), null);
-    this.tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
-    this.sharedPreferences  = ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
-    this.userGameInfo = ((V8Engine) getContext().getApplicationContext()).getUserGameInfo();
-
-  }
+  private TabNavigator tabNavigator;
+  private PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     super.onCreateView(inflater, container, savedInstanceState);
     return inflater.inflate(R.layout.fragment_leaderboard, container, false);
-
   }
 
-  @Override public void showLeaderboardEntries(List<LeaderboardEntry> entries) {
+  @Override public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof TabNavigator) {
+      tabNavigator = (TabNavigator) activity;
+    } else {
+      throw new IllegalStateException(
+          "Activity must implement " + TabNavigator.class.getSimpleName());
+    }
+  }
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    this.adapter =
+        new LeaderboardAdapter(Collections.emptyList(), null, leaderboardEntryPublishSubject);
+    this.tokenInvalidator = ((V8Engine) getContext().getApplicationContext()).getTokenInvalidator();
+    this.sharedPreferences =
+        ((V8Engine) getContext().getApplicationContext()).getDefaultSharedPreferences();
+    this.userGameInfo = ((V8Engine) getContext().getApplicationContext()).getUserGameInfo();
+    this.leaderboardEntryPublishSubject = PublishSubject.create();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    toolbar = null;
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void showLeaderboardEntries(List<List<LeaderboardEntry>> entries) {
     adapter.updateLeaderboardEntries(entries);
   }
 
-  @Override public void showCurrentUser(GetUserGameInfoResponse.User user){
-    userIcon.setImageResource(R.drawable.fake_app);
+  @Override public void showCurrentUser(GetUserGameInfoResponse.User user) {
+    ImageLoader.with(getContext())
+        .load(user.getAvatar(), userIcon);
     userRank.setText(String.valueOf(user.getPosition()));
     userScore.setText(String.valueOf(user.getScore()));
     userName.setText(user.getName());
+  }
+
+  @Override public Observable<LeaderboardEntry> postClicked() {
+    return leaderboardEntryPublishSubject;
   }
 
   @Override public void onViewCreated(android.view.View view, @Nullable Bundle savedInstanceState) {
@@ -97,29 +131,18 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     final Converter.Factory defaultConverter = WebService.getDefaultConverter();
 
     userIcon = (ImageView) view.findViewById(R.id.user_icon);
-    userRank = (TextView) view.findViewById(R.id.rank_value);
-    userScore = (TextView) view.findViewById(R.id.score_value);
     userName = (TextView) view.findViewById(R.id.user_name);
 
-    list = (RecyclerView) view.findViewById(R.id.fragment_leaderboard_list);
+    list = (RecyclerView) view.findViewById(R.id.fragment_leaderboard_global);
     list.setLayoutManager(new LinearLayoutManager(getContext()));
     list.setAdapter(adapter);
-    attachPresenter(new LeaderboardPresenter(this, new Leaderboard(baseBodyInterceptorV7, defaultClient, defaultConverter,
-        tokenInvalidator, sharedPreferences, userGameInfo), CrashReport.getInstance()), savedInstanceState);
 
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    return super.onOptionsItemSelected(item);
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    toolbar = null;
+    LeaderboardNavigator leaderboardNavigator =
+        new LeaderboardNavigator(getFragmentNavigator(), tabNavigator);
+    attachPresenter(new LeaderboardPresenter(this,
+        new Leaderboard(baseBodyInterceptorV7, defaultClient, defaultConverter, tokenInvalidator,
+            sharedPreferences, userGameInfo), CrashReport.getInstance(), leaderboardNavigator,
+        getFragmentNavigator()), savedInstanceState);
   }
 
   protected boolean hasToolbar() {
@@ -150,7 +173,7 @@ public class LeaderboardFragment extends FragmentView implements LeaderboardView
     setupToolbar();
   }
 
-  public void bindViews(View view){
+  public void bindViews(View view) {
 
     this.toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     setHasOptionsMenu(true);

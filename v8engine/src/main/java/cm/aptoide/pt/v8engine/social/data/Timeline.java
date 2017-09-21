@@ -204,20 +204,20 @@ public class Timeline {
       if(posts.get(i).getType().isGame()){
         Game post = (Game) posts.get(i);
         post.setScore(score);
-        post.setPlayed(played);
+        post.setCardsLeft(played);
         post.setgRanking(position);
       }
       if(posts.get(i).getType()==(CardType.GAMEANSWER)){
         GameAnswer post = (GameAnswer) posts.get(i);
         post.setScore(score);
-        post.setPlayed(played);
+        post.setCardsLeft(played);
         post.setgRanking(position);
       }
     }
   }
 
-  public Observable<UpdateLeaderboardResponse> updateLeaderboard(boolean answer) {
-    return UpdateLeaderboardRequest.of("", answer,bodyInterceptor, httpClient, converterFactory, "",
+  public Observable<UpdateLeaderboardResponse> updateLeaderboard(int answer) {
+    return UpdateLeaderboardRequest.of("", answer, bodyInterceptor, httpClient, converterFactory, "",
         tokenInvalidator, sharedPreferences)
         .observe(true);
 

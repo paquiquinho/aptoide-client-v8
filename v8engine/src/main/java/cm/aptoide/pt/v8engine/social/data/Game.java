@@ -1,7 +1,6 @@
 package cm.aptoide.pt.v8engine.social.data;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.dataprovider.model.v7.timeline.Ab;
 
 /**
  * Created by franciscocalado on 7/28/17.
@@ -20,7 +19,7 @@ public abstract class Game implements Post {
     private final String abUrl;
     private final boolean isLiked;
     private final CardType cardType;
-    private int played;
+    private int cardsLeft;
 
     public Game(String cardId, App rightAnswer, String answerURL, String question, int score, int gRanking,
         int lRanking, int fRanking, String abUrl, boolean isLiked, CardType cardType, int played){
@@ -35,7 +34,7 @@ public abstract class Game implements Post {
         this.abUrl = abUrl;
         this.isLiked = isLiked;
         this.cardType = cardType;
-        this.played = played;
+        this.cardsLeft = played;
     }
 
     @Override
@@ -84,6 +83,6 @@ public abstract class Game implements Post {
 
     public void setScore(int score){this.score=score;}
 
-    public int getPlayed() {return played;}
-    public void setPlayed(int played) {this.played = played;}
+    public int getCardsLeft() {return cardsLeft;}
+    public void setCardsLeft(int cardsLeft) {this.cardsLeft = cardsLeft;}
 }

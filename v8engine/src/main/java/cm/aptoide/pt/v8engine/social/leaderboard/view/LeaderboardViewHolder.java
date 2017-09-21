@@ -1,13 +1,12 @@
 package cm.aptoide.pt.v8engine.social.leaderboard.view;
 
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import cm.aptoide.pt.dataprovider.ws.v7.post.GetLeaderboardEntriesResponse;
 import cm.aptoide.pt.v8engine.R;
 import cm.aptoide.pt.v8engine.social.leaderboard.data.LeaderboardEntry;
+import java.util.List;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by franciscocalado on 8/18/17.
@@ -15,23 +14,54 @@ import cm.aptoide.pt.v8engine.social.leaderboard.data.LeaderboardEntry;
 
 public class LeaderboardViewHolder extends RecyclerView.ViewHolder {
 
-  private final TextView name;
-  private final TextView score;
-  private final ImageView main;
+  private final TextView globalName;
+  private final TextView globalScore;
+  private final TextView countryName;
+  private final TextView countryScore;
+  private final TextView friendsName;
+  private final TextView friendsScore;
+  private final PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject;
 
-
-  public LeaderboardViewHolder(View itemView) {
+  public LeaderboardViewHolder(View itemView,
+      PublishSubject<LeaderboardEntry> leaderboardEntryPublishSubject) {
     super(itemView);
-    this.name = (TextView) itemView.findViewById(R.id.leaderboard_user_name);
-    this.score = (TextView) itemView.findViewById(R.id.leaderboard_user_score);
-    this.main = (ImageView) itemView.findViewById(R.id.main_icon);
+    this.globalName = (TextView) itemView.findViewById(R.id.global_entry)
+        .findViewById(R.id.leaderboard_user_name);
+    this.globalScore = (TextView) itemView.findViewById(R.id.global_entry)
+        .findViewById(R.id.leaderboard_user_score);
+
+    this.countryName = (TextView) itemView.findViewById(R.id.country_entry)
+        .findViewById(R.id.leaderboard_user_name);
+    this.countryScore = (TextView) itemView.findViewById(R.id.country_entry)
+        .findViewById(R.id.leaderboard_user_score);
+
+    this.friendsName = (TextView) itemView.findViewById(R.id.friends_entry)
+        .findViewById(R.id.leaderboard_user_name);
+    this.friendsScore = (TextView) itemView.findViewById(R.id.friends_entry)
+        .findViewById(R.id.leaderboard_user_score);
+
+    this.leaderboardEntryPublishSubject = leaderboardEntryPublishSubject;
   }
 
-  public void setItem(LeaderboardEntry entry){
+  public void setItem(List<LeaderboardEntry> entries) {
 
+    globalName.setText("#" + entries.get(0)
+        .getPosition() + " " + entries.get(0)
+        .getName());
+    globalScore.setText(String.valueOf(entries.get(0)
+        .getScore()));
 
-    name.setText("#"+entry.getPosition()+" "+entry.getName());
-    score.setText(String.valueOf(entry.getScore()));
-    main.setImageResource(R.drawable.fake_app);
+    countryName.setText("#" + entries.get(1)
+        .getPosition() + " " + entries.get(1)
+        .getName());
+    countryScore.setText(String.valueOf(entries.get(1)
+        .getScore()));
+
+    friendsName.setText("#" + entries.get(2)
+        .getPosition() + " " + entries.get(2)
+        .getName());
+    friendsScore.setText(String.valueOf(entries.get(2)
+        .getScore()));
+    //globalName.setOnClickListener(click -> leaderboardEntryPublishSubject.onNext(entries.get(0)));
   }
 }

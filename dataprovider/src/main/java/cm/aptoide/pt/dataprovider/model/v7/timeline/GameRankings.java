@@ -12,14 +12,17 @@ import lombok.Getter;
 public class GameRankings {
 
     @Getter private final int score;
+    @Getter private final int cardsLeft;
     @Getter private final int gRanking;
     @Getter private final int lRanking;
     @Getter private final int fRanking;
 
     @JsonCreator
-    public GameRankings(@JsonProperty("score") int score, @JsonProperty("gRanking") int gRanking,
-                       @JsonProperty("lRanking") int lRanking, @JsonProperty("fRanking") int fRanking) {
+    public GameRankings(@JsonProperty("score") int score, @JsonProperty("cardsLeft") int cardsLeft,
+                        @JsonProperty("global") int gRanking, @JsonProperty("country") int lRanking,
+                        @JsonProperty("friends") int fRanking) {
         this.score = score;
+        this.cardsLeft = cardsLeft;
         this.gRanking = gRanking;
         this.lRanking = lRanking;
         this.fRanking = fRanking;

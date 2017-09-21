@@ -36,12 +36,12 @@ public class Leaderboard {
     mapper = new LeaderboardEntryMapper();
   }
 
-  public Observable<List<LeaderboardEntry>> getLeaderboardEntries() {
+  public Observable<List<List<LeaderboardEntry>>> getLeaderboardEntries() {
     return GetLeaderboardEntriesRequest.of("", "", 0, 10, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
-        .flatMap(getLeaderboardEntriesResponse -> Observable.just(getLeaderboardEntriesResponse.getData()
-            .getLeaderboard())).map(users -> mapper.map(users));
+        .flatMap(getLeaderboardEntriesResponse -> Observable.just(getLeaderboardEntriesResponse.getData()))
+        .map(users -> mapper.map(users));
   }
 
   public Observable<GetUserGameInfoResponse.User> getCurrentUser(){

@@ -188,8 +188,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="150dp"
-            android:rotation="180"
-            android:src="@drawable/ic_more_arrow_right"
+            android:src="@drawable/game_arrow_left"
             />
 
         <ImageView
@@ -208,7 +207,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:layout_marginTop="150dp"
-            android:src="@drawable/ic_more_arrow_right"
+            android:rotation="180"
+            android:src="@drawable/game_arrow_left"
             />
 
         <TextView

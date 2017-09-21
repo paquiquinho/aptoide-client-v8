@@ -2,7 +2,6 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.post.UpdateLeaderboardResponse;
 import okhttp3.OkHttpClient;
@@ -25,7 +24,7 @@ public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, Upda
     //    this.url = url;
   }
 
-  public static UpdateLeaderboardRequest of(String url, boolean answer, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+  public static UpdateLeaderboardRequest of(String url, int answer, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, String cardId, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
@@ -41,17 +40,20 @@ public class UpdateLeaderboardRequest extends V7<UpdateLeaderboardResponse, Upda
 
   public static class Body extends BaseBodyWithAlphaBetaKey {
 
-    private boolean answer;
+    private int answer;
     private String cardUid;
 
-    public Body(boolean answer, String cardId, SharedPreferences sharedPreferences) {
+    public Body(int answer, String cardId, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.answer = answer;
       this.cardUid = cardId;
     }
 
     public String getCardUid(){return cardUid;}
-    public void setAnswer(boolean answer){this.answer=answer;}
-    public boolean getAnswer(){return answer;}
+
+    public void setAnswer(int answer){this.answer=answer;}
+    public int getAnswer(){return answer;}
   }
+
+
 }

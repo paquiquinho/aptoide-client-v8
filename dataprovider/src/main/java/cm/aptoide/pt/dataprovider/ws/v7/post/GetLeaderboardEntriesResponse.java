@@ -15,18 +15,22 @@ public class GetLeaderboardEntriesResponse extends BaseV7Response {
   public void setData(Data data) {this.data = data;}
 
   public static class Data{
-    private List<User> leaderboard;
-    private User current;
+    private List<User> global;
+    private List<User> country;
+    private List<User> friends;
 
     public Data(){
 
     }
 
-    public List<User> getLeaderboard() {return leaderboard;}
-    public void setLeaderboard(List<User> leaderboard) {this.leaderboard = leaderboard;}
+    public List<User> getGlobal() {return global;}
+    public void setGlobal(List<User> global) {this.global = global;}
 
-    public User getCurrent() {return current; }
-    public void setCurrent(User current) {this.current = current;}
+    public List<User> getCountry() {return country;}
+    public void setCountry(List<User> country) {this.country = country;}
+
+    public List<User> getFriends() {return friends;}
+    public void setFriends(List<User> friends) {this.friends = friends;}
   }
 
   public static class User{

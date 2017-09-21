@@ -2,7 +2,6 @@ package cm.aptoide.pt.v8engine.social.view.viewholder;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.view.View;
@@ -97,10 +96,10 @@ public class Game1ViewHolder extends  PostViewHolder<Game1> {
         this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
             .getResources()), Application.getConfiguration()
             .getMarketName()));
-        if(card.getPlayed() == -1)
-            this.headerSubTitle.setText("Out of Cards");
+        if(card.getCardsLeft() == 1)
+            this.headerSubTitle.setText("Last card. Come back tomorrow for more!");
         else
-            this.headerSubTitle.setText("Card "+String.valueOf(card.getPlayed())+"/10");
+            this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
         //Randomize right answer to left or right side (if 0<rand<0.5, right answer is on the left side)
         if(rand<0.5){

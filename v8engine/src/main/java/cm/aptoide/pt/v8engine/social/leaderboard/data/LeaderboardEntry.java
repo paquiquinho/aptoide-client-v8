@@ -8,11 +8,13 @@ public class LeaderboardEntry {
   private String name;
   private int position;
   private int score;
+  private String avatar;
 
   public LeaderboardEntry(String name, int position, int score){
     this.name=name;
     this.position=position;
     this.score=score;
+    this.avatar = avatar;
   }
 
   public String getName() {return name;}
@@ -23,4 +25,7 @@ public class LeaderboardEntry {
 
   public int getScore() {return score;}
   public void setScore(int score) {this.score = score;}
+
+  public String getAvatar() {return avatar;}
+  public void setAvatar(String avatar) {this.avatar = avatar;}
 }

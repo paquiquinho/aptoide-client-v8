@@ -8,11 +8,9 @@ import android.text.Spannable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.preferences.Application;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.v8engine.R;
@@ -30,7 +28,7 @@ import rx.subjects.PublishSubject;
 public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
     private final TextView score;
-    private final TextView increment;
+    private final TextView headerIncrement;
     private final TextView leaderboard;
     private final ImageView scoreIcon;
     private final ImageView leaderboardIcon;
@@ -39,23 +37,19 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
     private final TextView headerSubTitle;
     private final SpannableFactory spannableFactory;
     private final ImageView appIcon;
+    private final TextView appName;
     private final Button getApp;
     private final TextView answerStatus;
     private final TextView answerMessage;
-    private final Button logIn;
     private final View leaderboards;
-    private final TextView rankingFirst;
-    private final TextView nameFirst;
-    private final TextView scoreFirst;
-    private final TextView rankingSec;
-    private final TextView nameSec;
-    private final TextView scoreSec;
-    private final TextView rankingThird;
-    private final TextView nameThird;
-    private final TextView scoreThird;
-    private final ProgressBar scoreProgress;
+    private final ImageView leaderboardStatus;
+    private final TextView scoreStatus;
+    private final TextView incrementStatus;
+    private final TextView globalStatus;
+    private final TextView countryStatus;
+    private final TextView friendsStatus;
+    private final ProgressBar rankProgress;
     private final ProgressBar leaderboardProgress;
-    private final Button expandLeaderboard;
 
     private int scoreValue;
 
@@ -70,14 +64,13 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
 
         this.score = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_score);
-        increment = (TextView) itemView.findViewById(R.id.score_increment);
-        leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard);
-        appIcon = (ImageView) itemView.findViewById(R.id.get_app_icon);
-        getApp = (Button) itemView.findViewById(R.id.get_app_button);
-        answerStatus = (TextView) itemView.findViewById(R.id.answer_status);
-        answerMessage = (TextView) itemView.findViewById(R.id.answer_message);
-        //playerList = (ListView) itemView.findViewById(R.id.leaderboard_display);
-        logIn = (Button) itemView.findViewById(R.id.login_button);
+        this.headerIncrement = (TextView) itemView.findViewById(R.id.score_increment);
+        this.leaderboard = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_leaderboard);
+        this.appIcon = (ImageView) itemView.findViewById(R.id.get_app_icon);
+        this.appName = (TextView) itemView.findViewById(R.id.app_name);
+        this.getApp = (Button) itemView.findViewById(R.id.get_app_button);
+        this.answerStatus = (TextView) itemView.findViewById(R.id.answer_status);
+        this.answerMessage = (TextView) itemView.findViewById(R.id.answer_message);
 
         this.headerIcon = (ImageView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_icon);
         this.headerTitle = (TextView) itemView.findViewById(R.id.displayable_social_timeline_answer_card_title);
@@ -87,56 +80,42 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
 
         this.leaderboards = itemView.findViewById(R.id.card_leaderboard);
 
-        this.rankingFirst = (TextView) itemView.findViewById(R.id.p1_ranking);
-        this.nameFirst = (TextView) itemView.findViewById(R.id.p1_name);
-        this.scoreFirst = (TextView) itemView.findViewById(R.id.p1_score);
+        this.leaderboardStatus = (ImageView) itemView.findViewById(R.id.trophy_image);
+        this.scoreStatus = (TextView) itemView.findViewById(R.id.score_value);
+        this.incrementStatus = (TextView) itemView.findViewById(R.id.status_increment);
+        this.globalStatus = (TextView) itemView.findViewById(R.id.global_value);
+        this.countryStatus = (TextView) itemView.findViewById(R.id.country_value);
+        this.friendsStatus = (TextView) itemView.findViewById(R.id.friends_value);
 
-        this.rankingSec = (TextView) itemView.findViewById(R.id.p2_ranking);
-        this.nameSec = (TextView) itemView.findViewById(R.id.p2_name);
-        this.scoreSec = (TextView) itemView.findViewById(R.id.p2_score);
-
-        this.rankingThird = (TextView) itemView.findViewById(R.id.p3_ranking);
-        this.nameThird = (TextView) itemView.findViewById(R.id.p3_name);
-        this.scoreThird = (TextView) itemView.findViewById(R.id.p3_score);
-
-        this.scoreProgress = (ProgressBar) itemView.findViewById(R.id.score_progress);
+        this.rankProgress = (ProgressBar) itemView.findViewById(R.id.rank_progress);
         this.leaderboardProgress = (ProgressBar) itemView.findViewById(R.id.leaderboard_progress);
-        this.expandLeaderboard = (Button) itemView.findViewById(R.id.expand_leaderboard);
 
 
     }
 
     @Override public void setPost(GameAnswer card, int position) {
 
-        String increment;
-
-        if (card.getPoints() > 0) {
-            increment ="(" + "+" + String.valueOf(card.getPoints()) + ")";
-        } else if(card.getPoints()==0){
-            increment="(0)";
+        if (card.getPoints() == 1) {
+            this.headerIncrement.setVisibility(View.VISIBLE);
+            this.headerIncrement.setTextColor(Color.GREEN);
         }else
-            increment = "(" + String.valueOf(card.getPoints()) + ")";
+            this.headerIncrement.setVisibility(View.GONE);
 
-        this.increment.setText(increment);
-        if(card.getPoints() < 0)
-            this.increment.setTextColor(Color.RED);
-        else if(card.getPoints()>0)
-            this.increment.setTextColor(Color.GREEN);
-        else
-            this.increment.setTextColor(Color.BLUE);
 
         this.leaderboard.setText(String.valueOf(card.getgRanking()));
+        this.score.setText(String.valueOf(card.getScore()));
         ImageLoader.with(itemView.getContext())
             .load(card.getRightAnswer()
                 .getIcon(), appIcon);
+        this.appName.setText(card.getRightAnswer().getName());
         this.answerStatus.setText(card.getStatus());
-        if(card.getStatus() == "Wrong")
+        if(card.getStatus() == "Wrong") {
             this.answerStatus.setTextColor(Color.RED);
-        else if(card.getStatus()=="Out of tries!")
-            this.answerStatus.setTextColor(Color.BLUE);
+            this.incrementStatus.setVisibility(View.GONE);
+        }
         else
             this.answerStatus.setTextColor(Color.GREEN);
-        this.answerMessage.setText(card.getMessage());
+        this.answerMessage.setText("The answer was:");
 
         this.getApp.setText("get app");
 
@@ -145,15 +124,15 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         this.headerTitle.setText(getStyledTitle(itemView.getContext(), getTitle(itemView.getContext()
             .getResources()), Application.getConfiguration()
                 .getMarketName()));
-        if(card.getPlayed() == -1)
-            this.headerSubTitle.setText("Out of Cards");
+        if(card.getCardsLeft() == 0)
+            this.headerSubTitle.setText("No more cards. Come back tomorrow for more!");
         else
-            this.headerSubTitle.setText("Card "+String.valueOf(card.getPlayed())+"/10");
+            this.headerSubTitle.setText(String.valueOf(card.getCardsLeft())+" cards left today.");
 
         getApp.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
             new CardTouchEvent(card, CardTouchEvent.Type.BODY)));
 
-        expandLeaderboard.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
+        leaderboardStatus.setOnClickListener(click -> cardTouchEventPublishSubject.onNext(
             new LeaderboardTouchEvent(card, CardTouchEvent.Type.BODY)));
 
 
@@ -166,33 +145,24 @@ public class GameAnswerViewHolder extends  PostViewHolder<GameAnswer> {
         //    leaderboard.setVisibility(View.GONE);
         //    leaderboardIcon.setVisibility(View.GONE);
         //    scoreIcon.setVisibility(View.GONE);
-        //    this.increment.setVisibility(View.GONE);
+        //    this.headerIncrement.setVisibility(View.GONE);
         //}
-        if(card.getUser1() != null){
-            score.setVisibility(View.VISIBLE);
-            scoreProgress.setVisibility(View.INVISIBLE);
-            this.score.setText(String.valueOf(card.getScore()));
+        if(card.getgRanking() != -1){
+            leaderboard.setVisibility(View.VISIBLE);
+            rankProgress.setVisibility(View.INVISIBLE);
+            this.leaderboard.setText(String.valueOf(card.getgRanking()));
             leaderboards.setVisibility(View.VISIBLE);
-            expandLeaderboard.setVisibility(View.VISIBLE);
             leaderboardProgress.setVisibility(View.INVISIBLE);
 
-            rankingFirst.setText(String.valueOf(card.getUser1().getPosition()));
-            nameFirst.setText(card.getUser1().getName());
-            scoreFirst.setText(String.valueOf(card.getUser1().getScore()));
-
-            rankingSec.setText(String.valueOf(card.getUser2().getPosition()));
-            nameSec.setText(card.getUser2().getName());
-            scoreSec.setText(String.valueOf(card.getUser2().getScore()));
-
-            rankingThird.setText(String.valueOf(card.getUser3().getPosition()));
-            nameThird.setText(card.getUser3().getName());
-            scoreThird.setText(String.valueOf(card.getUser3().getScore()));
+            scoreStatus.setText(String.valueOf(card.getScore()));
+            globalStatus.setText(String.valueOf(card.getgRanking()));
+            countryStatus.setText(String.valueOf(card.getlRanking()));
+            friendsStatus.setText(String.valueOf(card.getfRanking()));
         }
         else{
-            score.setVisibility(View.INVISIBLE);
-            scoreProgress.setVisibility(View.VISIBLE);
+            leaderboard.setVisibility(View.INVISIBLE);
+            rankProgress.setVisibility(View.VISIBLE);
             leaderboards.setVisibility(View.INVISIBLE);
-            expandLeaderboard.setVisibility(View.INVISIBLE);
             leaderboardProgress.setVisibility(View.VISIBLE);
         }
     }
